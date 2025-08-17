@@ -78,20 +78,8 @@
      <height>29</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuNew">
-    <property name="title">
-     <string>New</string>
-    </property>
-    <addaction name="actionWindow"/>
-   </widget>
-   <addaction name="menuNew"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionWindow">
-   <property name="text">
-    <string>Window</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections/>

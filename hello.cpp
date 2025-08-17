@@ -23,6 +23,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QCoreApplication>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDebug>
+
 
 
 std::string filterNumbers(const std::string& inputString) {
@@ -59,65 +65,39 @@ int main(int argc, char *argv[])
   // Create a QApplication object. This is the central object for Qt applications,
   // managing application-wide resources and the event loop.
   QApplication app(argc, argv);
+
+  QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+
+  // db.setHostName("localhost"); // or your PostgreSQL server IP
+		 // postgresql://mcf_postgresql_2_f0js_user:uiIxeWWFoDcSRipK9BhSEqmTYxZ5jMCW@dpg-d288ja49c44c73a6oi5g-a.singapore-postgres.render.com/mcf_postgresql_2_f0js
+  db.setHostName("dpg-d288ja49c44c73a6oi5g-a.singapore-postgres.render.com");
+  db.setPort(5432); // Default PostgreSQL port
+  db.setDatabaseName("mcf_postgresql_2_f0js");
+  db.setUserName("mcf_postgresql_2_f0js_user");
+  db.setPassword("uiIxeWWFoDcSRipK9BhSEqmTYxZ5jMCW");
+
+  if (!db.open()) {
+    qDebug() << "Error: Failed to connect to database:" << db.lastError().text();
+    return 1;
+  } else {
+    qDebug() << "Connected to database!";
+  }
+  
+  // ... perform database operations ...
+  
+  db.close(); // Close the connection when no longer needed
   
   // Create a QWidget object. When created without a parent, it acts as a top-level window.
-  QWidget *window = new QWidget();
-  QMainWindow widget;
 
-  Ui::MainWindow ui;
-  ui.setupUi(&widget);
+  
 
-  ui.label->setText("helloooo");
-
-  QObject::connect(ui.pushButton, &QPushButton::clicked, [&]() {
-    ui.textEdit->append("Text inserted by button.\n"); // Appends text to a new line
-    // Or textEdit->insertPlainText("Text inserted by button."); for plain text
-  });
-   
-
-
-
+  MainWindow widget;
   widget.show();
-  // return app.exec();
 
-  // setCentralWidget(window);
-
-  // QVBoxLayout *layout = new QVBoxLayout(window);
-
-  
-  // QLabel *pointOneLongLabel = new QLabel(QApplication::translate("windowlayout", "Longitude:"));
-  // pointOneLongLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-  // pointOneLongLabel->setText("first line\nsecond line");
-  // pointOneLongLabel->setAlignment(Qt::AlignBottom | Qt::AlignRight);
-
-  
-  // QLabel *pointTwoLongLabel = new QLabel(QApplication::translate("windowlayout", "whatever"));
-  // pointTwoLongLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-  // pointTwoLongLabel->setText("my nameis peter parker");
-  // pointTwoLongLabel->setAlignment(Qt::AlignBottom | Qt::AlignRight);
-
-  // QTextEdit *textEdit = new QTextEdit();
-  // QPushButton *pushButton = new QPushButton();
-  
-
-  // layout->addWidget(pointOneLongLabel);
-  // layout->addWidget(pointTwoLongLabel);
-  // layout->addWidget(textEdit);
-  // layout->addWidget(pushButton);
+  // In summary: You should call show() on the instance of your MainWindow class, not on the Ui::MainWindow object. The Ui::MainWindow object is responsible for setting up the visual components within your MainWindow.
 
 
-  
-  // Set the title of the window.
 
-
-  // Set the initial size of the window (width, height).
-
-
-  // Show the window.
-
-
-  // Start the Qt event loop. This makes the application responsive and handles
-  // user interactions until the window is closed.
 
   return app.exec();
 }
