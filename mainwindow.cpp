@@ -18,11 +18,25 @@ MainWindow::MainWindow(QWidget *parent)
   , ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
-  
-  // connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onButtonClicked;
 
-  // ui->label->setText("hello hello");
-  // ui->label->setText("hello hello");
+  // ========================================
+  
+  a_model = new QStringListModel(this);
+  QStringList a_list;
+  a_list << "Abu Yusuf" << "James Berg" << "Petra Hani";
+
+  a_model->setStringList(a_list);
+
+  ui->listView->setModel(a_model);
+  ui->comboBox->setModel(a_model);
+
+  ui->listView->
+    setEditTriggers(QAbstractItemView::AnyKeyPressed |
+		    QAbstractItemView::DoubleClicked);
+  
+
+  // ========================================
+  
 
   ui->label->setText("helloooo");
   
@@ -117,9 +131,9 @@ void MainWindow::on_pushButton_clicked()
   }
   
   
-  // ... perform database operations ...
   
-  db.close(); // Close the connection when no longer needed
+  
+  db.close(); 
 
 
 }
@@ -136,3 +150,44 @@ void MainWindow::on_pushButton_clicked()
 //  });
 
 
+
+
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    // Insert button clicked
+  qDebug() << "hello there";
+
+  // we get row for stupid C++ awareness
+  int row = a_model->rowCount();
+  a_model->insertRows(row,1);
+  QModelIndex index = a_model->index(row);
+
+  ui->listView->setCurrentIndex(index);
+  ui->listView->edit(index);
+  
+  
+}
+
+
+void MainWindow::on_pushButton_3_clicked()
+{
+  // the number is protected by the index object, quite a stupid idea
+  int row = ui->listView->currentIndex().row();
+  QModelIndex tp_index = ui->listView->currentIndex();
+
+  a_model->insertRows(row,1);
+
+  QModelIndex index = a_model->index(row);
+
+  ui->listView->setCurrentIndex(index);
+  ui->listView->edit(index);
+}
+
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    // Delete button clicked
+  a_model->removeRows(ui->listView->currentIndex().row(),1);
+}
