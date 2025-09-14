@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QStringListModel>
-
+// #include <QDebug>
 
 #include "specialbox.h"
 #include "table.h"
@@ -21,18 +21,26 @@ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
   void call_me();
+  QString toPlainText();
 
 private slots:
   void on_pushButton_2_clicked();
   void on_pushButton_3_clicked();
   void on_pushButton_4_clicked();
   void on_pushButton_clicked(); // Slot for a button named 'myButton'
+  void on_button_saveUser_clicked();
+public slots:
+  void test_function(int index);
+  void test_text_edit();
+  
 
 
 private:
   Ui::MainWindow *ui;
   QLabel *myLabel;
   QStringListModel *a_model;
+  QStringListModel *model2;
+  QString textInput_model;
 
 };
 #endif // MAINWINDOW_H

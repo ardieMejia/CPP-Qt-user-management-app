@@ -514,3 +514,4 @@ int main(int argc, char *argv[])
 ** [[https://www.bogotobogo.com/Qt/Qt5_QListView_QStringListModel_ModelView_MVC.php][bogotobogo blog]]
 ** [[https://woboq.com/codebrowser.html][insane code browser]]
 ** [[https://www.qtcentre.org/threads/67116-How-to-use-a-slot-in-Qt-like-a-function-in-C][since we are still learning signals and slots]]
+** [[https://samdutton.wordpress.com/2008/10/03/debugging-signals-and-slots-in-qt/][sam dutton Debugging signals and slots]]

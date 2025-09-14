@@ -25,6 +25,9 @@ public:
   void setData(int row, int column, const QVariant &value);
   bool setHeaderData (int section, Qt::Orientation orientation, const QVariant& value, int role = Qt::DisplayRole);
 
+public slots:
+  void test_function(int index);
+  
 private:
   QList<QStringList> mainData;
   QStringList mainHeader;

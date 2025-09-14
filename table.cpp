@@ -1,4 +1,5 @@
 #include "table.h"
+#include <QDebug>
 
 TableModel::TableModel(QObject *parent)
     : QAbstractTableModel(parent)
@@ -68,3 +69,9 @@ bool TableModel::setHeaderData(int section, Qt::Orientation orientation, const Q
 }
 
 
+void TableModel::test_function(int index)
+{
+    // Delete button clicked
+
+  qDebug() << "triggered successfully" << index;
+}

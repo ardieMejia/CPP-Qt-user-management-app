@@ -18,11 +18,58 @@ MainWindow::MainWindow(QWidget *parent)
   , ui(new Ui::MainWindow)
 {
   ui->setupUi(this);
-  
-  // connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::onButtonClicked;
 
-  // ui->label->setText("hello hello");
-  // ui->label->setText("hello hello");
+  // ========================================
+  
+  a_model = new QStringListModel(this);
+  QStringList a_list;
+  a_list << "Abu Yusuf" << "James Berg" << "Petra Hani";
+
+  a_model->setStringList(a_list);
+
+  ui->listView->setModel(a_model);
+  ui->comboBox->setModel(a_model);
+
+  ui->listView->
+    setEditTriggers(QAbstractItemView::AnyKeyPressed |
+		    QAbstractItemView::DoubleClicked);
+  
+
+  // ========================================
+
+
+
+  // ++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+  model2 = new QStringListModel(this);
+  QStringList list2;
+  list2 << "Hanifa" << "Bev" << "Ardie";
+  model2->setStringList(list2);
+
+  ui->comboBox_ssync->setModel(model2); 
+
+  ui->textEdit_ssync->setText(textInput_model);
+
+
+  // model3 = new QStringListModel(this);
+  // QStringList list3;
+  // list3 << "Kabul" << "South London" << "Kuala Lumpur";
+  // model3->setStringList(list3);
+
+
+
+  // connect(ui->comboBox_ssync, &QComboBox::currentIndexChanged, this,  QOverload(&MainWindow::test_function));
+  connect(ui->comboBox_ssync, QOverload<int>::of(&QComboBox::currentIndexChanged), this, QOverload<int>::of(&MainWindow::test_function));
+  connect(ui->textEdit_ssync, &QTextEdit::textChanged, this, &MainWindow::test_text_edit);
+  // connect(ui->comboBox_ssync, QOverload<int>::of(&QComboBox::currentIndexChanged), this, QOverload<int>::of(&MainWindow::test_function));
+  
+
+  
+  // ui->comboBox_ssync->setModel(a_model);
+  
+  // ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  
 
   ui->label->setText("helloooo");
   
@@ -33,6 +80,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->textEdit->append("Text inserted by button.\n"); // Appends text to a new line
     // Or textEdit->insertPlainText("Text inserted by button."); for plain text
   });
+
+
 
   TableModel *tablemodel = new TableModel(this);
   // tablemodel->
@@ -58,6 +107,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 
   ui->tableView->setModel(tablemodel);
+
+
   
 }
 
@@ -117,9 +168,9 @@ void MainWindow::on_pushButton_clicked()
   }
   
   
-  // ... perform database operations ...
   
-  db.close(); // Close the connection when no longer needed
+  
+  db.close(); 
 
 
 }
@@ -135,4 +186,75 @@ void MainWindow::on_pushButton_clicked()
 //   // Or textEdit->insertPlainText("Text inserted by button."); for plain text
 //  });
 
+
+
+
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    // Insert button clicked
+  qDebug() << "hello there";
+
+  // we get row for stupid C++ awareness
+  int row = a_model->rowCount();
+  a_model->insertRows(row,1);
+  QModelIndex index = a_model->index(row);
+
+  ui->listView->setCurrentIndex(index);
+  ui->listView->edit(index);
+  
+  
+}
+
+
+void MainWindow::on_pushButton_3_clicked()
+{
+  // the number is protected by the index object, quite a stupid idea
+  int row = ui->listView->currentIndex().row();
+  QModelIndex tp_index = ui->listView->currentIndex();
+
+  a_model->insertRows(row,1);
+
+  QModelIndex index = a_model->index(row);
+
+  ui->listView->setCurrentIndex(index);
+  ui->listView->edit(index);
+}
+
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    // Delete button clicked
+  a_model->removeRows(ui->listView->currentIndex().row(),1);
+}
+
+
+void MainWindow::test_function(int index)
+{
+    // Delete button clicked
+
+  qDebug() << "triggered successfully getting index ";
+  // modelIndex = QModelIndex
+  // qDebug() << model2->data(model2->index(index),Qt::DisplayRole);
+
+  
+  QString fullname = model2->data(model2->index(index),Qt::DisplayRole).toString();
+
+  
+  if (fullname == "Hanifa"){    
+    qDebug() << "matches";
+  }
+  // if model2->data(model2->index(index),Qt::DisplayRole);
+}
+
+
+
+void MainWindow::test_text_edit()
+{
+    // Delete button clicked
+
+  qDebug() << "triggered successfully getting index ";
+
+}
 
