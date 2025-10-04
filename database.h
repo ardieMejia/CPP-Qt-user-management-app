@@ -12,6 +12,7 @@
 
 
 extern QSqlDatabase db;
+extern bool isUsersTableFilled;
 
 
 QVariant _openDatabase();

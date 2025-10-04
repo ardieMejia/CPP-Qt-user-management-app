@@ -8,7 +8,7 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QMessageBox>
-
+#include "database.h"
 
 
   
@@ -32,7 +32,11 @@ InsertUserWindow::~InsertUserWindow()
 
 
 void InsertUserWindow::on_insertUser_clicked(){
-  QSqlQuery query;
+
+  QVariant resultString = _openDatabase();
+  qDebug() << resultString;
+  QSqlDatabase db = QSqlDatabase::database("_render_connection_db");
+  QSqlQuery query(db);
   query.prepare("INSERT INTO users (name, age) "
 		"VALUES (:name, :age)");
   // query.bindValue(":id", 1001);
@@ -41,7 +45,10 @@ void InsertUserWindow::on_insertUser_clicked(){
   QString age = ui->textEditAge->toPlainText();
   query.bindValue(":name", name);
   query.bindValue(":age", age);
-  query.exec();
+  bool result = query.exec();
+  if (result){
+    isUsersTableFilled = true;
+  }
 }
 
 

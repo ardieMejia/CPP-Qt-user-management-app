@@ -1,6 +1,6 @@
 * Better links:
 ** https://stuff.mit.edu/afs/athena/software/texmaker_v5.0.2/qt57/doc/qtwidgets/modelview.html
-** 
+*** 
 * Drag and drop possibly:
 ** https://stackoverflow.com/questions/45077778/qtableview-qabstracttablemodel-move-rows-via-dragndrop
 ** https://stackoverflow.com/questions/15906864/drag-and-drop-support-when-subclassing-from-qabstractitemmodel
@@ -515,3 +515,86 @@ int main(int argc, char *argv[])
 ** [[https://woboq.com/codebrowser.html][insane code browser]]
 ** [[https://www.qtcentre.org/threads/67116-How-to-use-a-slot-in-Qt-like-a-function-in-C][since we are still learning signals and slots]]
 ** [[https://samdutton.wordpress.com/2008/10/03/debugging-signals-and-slots-in-qt/][sam dutton Debugging signals and slots]]
+* We need to do this one for SQL queries!!
+** https://doc.qt.io/qt-6/qtwidgets-richtext-orderform-example.html
+* we finally understand Qt's stupid way of doing things, a lot of set__ functions, so now we can finally do a real update
+#+begin_src c++
+
+  #include <QCoreApplication>
+#include <QSqlDatabase>
+#include <QSqlTableModel>
+#include <QDebug>
+
+// Helper function to create a connection and some test data
+bool createConnection() {
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(":memory:"); // Use an in-memory database for demonstration
+    if (!db.open()) {
+        qDebug() << "Cannot open database:" << db.lastError().text();
+        return false;
+    }
+
+    QSqlQuery query;
+    query.exec("CREATE TABLE employees (id INTEGER PRIMARY KEY, name VARCHAR(50), salary INTEGER)");
+    query.exec("INSERT INTO employees (name, salary) VALUES ('Alice', 50000)");
+    query.exec("INSERT INTO employees (name, salary) VALUES ('Bob', 60000)");
+    return true;
+}
+
+int main(int argc, char *argv[]) {
+    QCoreApplication app(argc, argv);
+
+    if (!createConnection()) {
+        return 1;
+    }
+
+    QSqlTableModel model;
+    model.setTable("employees");
+    model.setEditStrategy(QSqlTableModel::OnManualSubmit); // Set manual submission strategy
+    model.select(); // Populate the model with data from the table
+
+    qDebug() << "Initial data:";
+    for (int i = 0; i < model.rowCount(); ++i) {
+        qDebug() << "ID:" << model.data(model.index(i, 0)).toInt()
+                 << "Name:" << model.data(model.index(i, 1)).toString()
+                 << "Salary:" << model.data(model.index(i, 2)).toInt();
+    }
+
+    // --- Update a record ---
+    // Find the index of the record to update (e.g., the first record)
+    QModelIndex indexToUpdate = model.index(0, 0); // Row 0, Column 0 (ID)
+
+    // Modify a field in that record (e.g., change Alice's salary)
+    int rowToModify = 0;
+    int salaryColumn = 2; // Assuming salary is the third column (index 2)
+    QModelIndex salaryIndex = model.index(rowToModify, salaryColumn);
+    model.setData(salaryIndex, 55000); // Set new salary
+
+    qDebug() << "\nData after modification (before submit):";
+    for (int i = 0; i < model.rowCount(); ++i) {
+        qDebug() << "ID:" << model.data(model.index(i, 0)).toInt()
+                 << "Name:" << model.data(model.index(i, 1)).toString()
+                 << "Salary:" << model.data(model.index(i, 2)).toInt();
+    }
+
+    // --- Submit the changes to the database ---
+    if (model.submitAll()) {
+        qDebug() << "\nChanges submitted successfully.";
+    } else {
+        qDebug() << "\nFailed to submit changes:" << model.lastError().text();
+    }
+
+    // Re-select to refresh the model and see the committed changes
+    model.select();
+
+    qDebug() << "\nData after submit and re-select:";
+    for (int i = 0; i < model.rowCount(); ++i) {
+        qDebug() << "ID:" << model.data(model.index(i, 0)).toInt()
+                 << "Name:" << model.data(model.index(i, 1)).toString()
+                 << "Salary:" << model.data(model.index(i, 2)).toInt();
+    }
+
+    return app.exec();
+}
+
+#+end_src

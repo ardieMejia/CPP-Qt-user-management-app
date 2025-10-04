@@ -46,24 +46,11 @@
      <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="insertUserDialog">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>100</y>
-      <width>151</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>insert user form</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="temp">
     <property name="geometry">
      <rect>
       <x>210</x>
-      <y>150</y>
+      <y>110</y>
       <width>151</width>
       <height>33</height>
      </rect>
@@ -79,7 +66,7 @@
      <x>0</x>
      <y>0</y>
      <width>559</width>
-     <height>29</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

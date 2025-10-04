@@ -7,16 +7,13 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
-#include <QSqlTableModel>
 #include <QSqlError>
 #include <QDebug>
 #include <QTableView>
 #include <QItemSelectionModel>
-#include <QStandardItemModel>
 #include <QVector>
 #include "database.h"
 #include <QMessageBox>
-// #include <QSqlRecord>
 #include "insertuserwindow.h"
 
 
@@ -33,7 +30,18 @@ MainWindow::MainWindow(QWidget *parent)
 
   // ========================================
   
+  a_model = new QStringListModel(this);
+  QStringList a_list;
+  a_list << "Abu Yusuf" << "James Berg" << "Petra Hani";
 
+  a_model->setStringList(a_list);
+
+  ui->listView->setModel(a_model);
+  ui->comboBox->setModel(a_model);
+
+  ui->listView->
+    setEditTriggers(QAbstractItemView::AnyKeyPressed |
+		    QAbstractItemView::DoubleClicked);
   
 
   // ========================================
@@ -59,10 +67,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-
+  // connect(ui->comboBox_ssync, &QComboBox::currentIndexChanged, this,  QOverload(&MainWindow::test_function));
   connect(ui->comboBox_ssync, QOverload<int>::of(&QComboBox::currentIndexChanged), this, QOverload<int>::of(&MainWindow::test_function));
   connect(ui->textEdit_ssync, &QTextEdit::textChanged, this, &MainWindow::test_text_edit);
-
+  // connect(ui->comboBox_ssync, QOverload<int>::of(&QComboBox::currentIndexChanged), this, QOverload<int>::of(&MainWindow::test_function));
   
 
 
@@ -71,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-  connect(ui->userTableView, &QTableView::doubleClicked, this, &MainWindow::viewGetUpdate);
+  connect(ui->userTableView, &QTableView::doubleClicked, this, &MainWindow::some_function);
 
 
 
@@ -112,47 +120,8 @@ void MainWindow::on_pushButton_clicked(){
 
 
 
-void MainWindow::viewGetUpdate(const QModelIndex &index){
+void MainWindow::some_function(){
   qDebug() << "some tests";
-
-  QStringList list_;
-
-  qDebug() << index.row();
-
-
-  
-  
-  if (modelUser){
-
-    
-    
-    // QSqlRecord recordUser =
-    // modelUser->record(index.row());
-
-
-
-    QStandardItemModel *model = new QStandardItemModel(1, 3);
-
-    model->setHeaderData(0, Qt::Horizontal, "ID");
-    model->setHeaderData(1, Qt::Horizontal, "NAME");
-    model->setHeaderData(2, Qt::Horizontal, "AGE");
-    
-    ui->userUpdateView->setModel(model);
-
-    
-    // QSqlTableModel modelTableUser;
-    // modelTableUser.setRecord(0,recordUser);
-
-
-
-
-
-    
-
-    
-  }
-
-  
 }
 
 
@@ -171,7 +140,7 @@ void MainWindow::on_buttonRefresh_clicked (){
     ui->userTableView->setModel(modelUser);
     ui->userTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
     ui->userTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    // ui->userTableView->doubleClicked.connect(viewGetUpdate);
+    // ui->userTableView->doubleClicked.connect(some_function);
 
     ui->userTableView->show();
 
@@ -266,22 +235,42 @@ void MainWindow::on_buttonTableExists_clicked (){
   
 }
 
-
-
-
-void MainWindow::on_updateDatabase_clicked()
+void MainWindow::on_pushButton_2_clicked()
 {
+    // Insert button clicked
+  qDebug() << "hello there";
 
+  // we get row for stupid C++ awareness
+  int row = a_model->rowCount();
+  a_model->insertRows(row,1);
+  QModelIndex index = a_model->index(row);
+
+  ui->listView->setCurrentIndex(index);
+  ui->listView->edit(index);
   
-
-
-
   
 }
 
 
+void MainWindow::on_pushButton_3_clicked()
+{
+  // the number is protected by the index object, quite a stupid idea
+  int row = ui->listView->currentIndex().row();
+
+  a_model->insertRows(row,1);
+
+  QModelIndex index = a_model->index(row);
+
+  ui->listView->setCurrentIndex(index);
+  ui->listView->edit(index);
+}
 
 
+void MainWindow::on_pushButton_4_clicked()
+{
+    // Delete button clicked
+  a_model->removeRows(ui->listView->currentIndex().row(),1);
+}
 
 
 void MainWindow::test_function(int index)

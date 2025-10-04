@@ -18,11 +18,11 @@ QVariant _openDatabase(){
   QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL", "_render_connection_db");
 
 
-  db.setHostName("dpg-d3r4cvl6ubrc738dl0ag-a.singapore-postgres.render.com");
+  db.setHostName("dpg-d37auere5dus739709qg-a.singapore-postgres.render.com");
   db.setPort(5432); // Default PostgreSQL port
-  db.setDatabaseName("vanilla_postgresql_2");
-  db.setUserName("vanilla_postgresql_2_user");
-  db.setPassword("oM44xjdJ6OH2Y6oYlmDDZEUTgnXDHo0M");
+  db.setDatabaseName("vanilla_postgresql_1");
+  db.setUserName("vanilla_postgresql_1_user");
+  db.setPassword("2hiE2Y8h6GQr9vpnvcd71PS1WBDWsEi4");
 
   qDebug() << "attempting to connect";
 

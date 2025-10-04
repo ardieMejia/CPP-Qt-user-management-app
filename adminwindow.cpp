@@ -8,7 +8,6 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QMessageBox>
-#include "insertuserwindow.h"
 #include "database.h"
 #include <QVariant>
 
@@ -41,6 +40,9 @@ AdminWindow::AdminWindow(QWidget *parent)
 
   connect(actionDnR, &QAction::triggered, this, &AdminWindow::_restart_database);
   // connect(ui->textEdit_ssync, &QTextEdit::textChanged, this, &MainWindow::test_text_edit);
+
+
+
 
   
 }
@@ -126,11 +128,7 @@ void AdminWindow::_restart_database()
 
 
 
-void AdminWindow::on_insertUserDialog_clicked(){
-  qDebug() << "testing";
-  InsertUserWindow *insertuserwindow = new InsertUserWindow();
-  insertuserwindow->show();
-}
+
 
 
 

@@ -5,7 +5,6 @@
 #include <QLabel>
 #include <QStringListModel>
 #include <QSqlQueryModel>
-#include <QSqlRecord>
 #include <QVariant>
 
 // #include <QDebug>
@@ -28,16 +27,15 @@ public:
   QString toPlainText();
 
 private slots:
-  // void on_pushButton_2_clicked();
-  // void on_pushButton_3_clicked();
-  // void on_pushButton_4_clicked();
-  void on_updateDatabase_clicked();
+  void on_pushButton_2_clicked();
+  void on_pushButton_3_clicked();
+  void on_pushButton_4_clicked();
   void on_pushButton_clicked();
   void on_buttonRefresh_clicked();
   void on_buttonDeleteSelection_clicked();
   void on_buttonTableExists_clicked();
   void deleteUser(QVector<int> &arr);
-  void viewGetUpdate(const QModelIndex &index);
+  void some_function();
   void on_insertUserDialog_clicked();
 
 public slots:
@@ -49,12 +47,10 @@ public slots:
 private:
   Ui::MainWindow *ui;
   QLabel *myLabel;
-  QStringListModel *modelHack;
+  QStringListModel *a_model;
   QStringListModel *model2;
   QSqlQueryModel *modelUser;
   QString textInput_model;
-  // QAbstractItemModel modelTableUserAbstract;
-  // QSqlRecord *recordUser const;
 
 
 };

@@ -69,15 +69,16 @@ int main(int argc, char *argv[])
 
 
   
-  // Create a QWidget object. When created without a parent, it acts as a top-level window.
 
-  // StupidClass stupidObject;
+
+
 
   MainWindow widget;
-  // widget.call_me();
+  // MainWindow widget;
   widget.show();
+  // widget.show();
 
-  // In summary: You should call show() on the instance of your MainWindow class, not on the Ui::MainWindow object. The Ui::MainWindow object is responsible for setting up the visual components within your MainWindow.
+
 
 
 
