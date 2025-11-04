@@ -62,7 +62,7 @@ void AdminWindow::_restart_database()
 
 
 
-  QVariant resultString = _openDatabase();
+  DBconnectionStatus resultString = _openDatabase();
   
   
   
@@ -101,21 +101,39 @@ void AdminWindow::_restart_database()
   }else{
     qDebug() << "Something went wrong" << query.lastError().text();
   }
-  
 
-  QString queryCreateUsers = "CREATE TABLE IF NOT EXISTS users ("
-    "id INT GENERATED ALWAYS AS IDENTITY,"
-    "name VARCHAR (50) NOT NULL,"
-    "age INT"
+
+  
+    QString queryCreateDepartments = "CREATE TABLE IF NOT EXISTS departments ("
+    "id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,"
+    "department_name VARCHAR (100)"
     ");";
   
-  if (query.exec(queryCreateUsers)){
-    qDebug() << "Table created successfully!!" ;
+  if (query.exec(queryCreateDepartments)){
+    qDebug() << "Table \"departments\" created successfully!!" ;
       }else{
     qDebug() << "Something went wrong" << query.lastError().text();
   }
   
 
+  
+  QString queryCreateUsers = "CREATE TABLE IF NOT EXISTS users ("
+    "id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,"
+    "name VARCHAR (50) NOT NULL,"
+    "age INT,"
+    "department_id INT,"
+    "CONSTRAINT fk_departments FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL"
+    ");";
+  
+  if (query.exec(queryCreateUsers)){
+    qDebug() << "Table \"users\" created successfully!!" ;
+      }else{
+    qDebug() << "Something went wrong" << query.lastError().text();
+  }
+
+
+
+  
   db.close();  
   
   // _closeDatabase();

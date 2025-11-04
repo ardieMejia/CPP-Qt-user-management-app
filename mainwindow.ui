@@ -67,7 +67,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonRefresh">
+   <widget class="QPushButton" name="buttonGetAllUsers">
     <property name="geometry">
      <rect>
       <x>460</x>
@@ -84,9 +84,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>20</y>
+      <y>40</y>
       <width>421</width>
-      <height>331</height>
+      <height>181</height>
      </rect>
     </property>
    </widget>
@@ -163,6 +163,29 @@
     </property>
     <property name="text">
      <string>Update User</string>
+    </property>
+   </widget>
+   <widget class="QTableView" name="departmentTableView">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>250</y>
+      <width>421</width>
+      <height>111</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="insertDepartmentDialog">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>240</y>
+      <width>129</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Insert Dept Window</string>
     </property>
    </widget>
   </widget>

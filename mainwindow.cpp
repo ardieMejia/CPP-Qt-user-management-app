@@ -18,6 +18,7 @@
 #include "database.h"
 #include <QMessageBox>
 #include <QDir>
+#include <QSpinBox>
 // #include <QSqlRecord>
 #include "insertuserwindow.h"
 
@@ -36,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent)
   // ========================================
   
 
-  
+
+
+
 
   // ========================================
 
@@ -112,7 +115,88 @@ void MainWindow::on_pushButton_clicked(){
 // }
 
 
+myTestDelegate::myTestDelegate(QObject *parent) : QStyledItemDelegate(parent)
+{
+    qDebug() << "myTestDelegate created";
+}
 
+myTestDelegate::~myTestDelegate()
+{
+    qDebug() << "ClassA destroyed";
+}
+
+
+// ==================================================
+// ==================================================
+
+QWidget *myTestDelegate::createEditor(QWidget *parent,
+                                       const QStyleOptionViewItem &option,
+                                       const QModelIndex &index) const
+{
+
+  
+  QComboBox *editor = new QComboBox(parent);
+  QString var1 = QString("asd");
+  QStringList var2;
+  var2 << "asd" << "asd";
+  QString var3 =  var2.join(QString(","));
+  for (QString &item : var2){
+    editor->addItem(item);
+  }
+
+  
+  
+  
+  return editor;
+}
+
+
+void myTestDelegate::setEditorData(QWidget *editor,
+                                    const QModelIndex &index) const
+{
+  // int value = index.data(Qt::EditRole).toInt();
+  
+  // QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
+  // spinBox->setValue(value);
+
+  QComboBox *cb = qobject_cast<QComboBox *>(editor);
+
+  cb->setCurrentIndex(0);
+}
+
+void myTestDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+				  const QModelIndex &index) const
+{
+  // QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
+  // spinBox->interpretText();
+  //   int value = spinBox->value();
+    
+  //   model->setData(index, value, Qt::EditRole);
+
+  QComboBox *cb = qobject_cast<QComboBox *>(editor);
+
+  model->setData(index, cb->currentText(), Qt::EditRole);
+//   QString underscore = "__";
+//   QString total ="";
+//   total += underscore;
+//   total += cb->currentText();
+//   model->setData(index, total, Qt::DisplayRole);
+}
+
+// QWidget *ComboBoxItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+// {
+//     // Create the combobox and populate it
+//     QComboBox *cb = new QComboBox(parent);
+//     const int row = index.row();
+//     cb->addItem(QString("one in row %1").arg(row));
+//     cb->addItem(QString("two in row %1").arg(row));
+//     cb->addItem(QString("three in row %1").arg(row));
+//     return cb;
+// }
+
+// ==================================================
+// ==================================================
+  
 
 void MainWindow::viewGetUpdate(const QModelIndex &index){
   qDebug() << "some tests";
@@ -134,7 +218,8 @@ void MainWindow::viewGetUpdate(const QModelIndex &index){
 
   
   
-  if (modelUser){
+  if (modelUser->rowCount()){
+
 
     
     
@@ -144,24 +229,25 @@ void MainWindow::viewGetUpdate(const QModelIndex &index){
 
 
     
-    modelCurrentItem = new QStandardItemModel(1, recordUser.count());
+    modelCurrentUser = new QStandardItemModel(1, recordUser.count());
     // QTableView *modelTableUser = new QTableView();
 
 
     for (int column = 0; column < 3; column++){
-      modelCurrentItem->setHeaderData(column, Qt::Horizontal, recordUser.fieldName(column));
+      modelCurrentUser->setHeaderData(column, Qt::Horizontal, recordUser.fieldName(column));
       QSqlField fieldSql = recordUser.field(column);
       QString stringField = fieldSql.value().toString();
       QStandardItem *item = new QStandardItem(stringField);
-      modelCurrentItem->setItem(0,column,item);
+      modelCurrentUser->setItem(0,column,item);
     }
     
-    ui->userUpdateView->setModel(modelCurrentItem);
+    ui->userUpdateView->setModel(modelCurrentUser);
     ui->userUpdateView->setEditTriggers(QAbstractItemView::DoubleClicked);     
       // setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    
+    myTestDelegate* myEditor = new myTestDelegate(ui->userUpdateView);
 
+    ui->userUpdateView->setItemDelegateForColumn(1, myEditor);
     
     // QSqlTableModel modelTableUser;
     // modelTableUser.setRecord(0,recordUser);
@@ -180,26 +266,28 @@ void MainWindow::viewGetUpdate(const QModelIndex &index){
 
 
 
-void MainWindow::on_buttonRefresh_clicked (){
-  if (isUsersTableFilled){
-    QSqlDatabase db = QSqlDatabase::database("_render_connection_db");
-    QSqlQuery query(db);
-
-    query.prepare("SELECT * FROM users");
-    query.exec();
-
-    modelUser = new QSqlQueryModel();
-    modelUser->setQuery(query);
+void MainWindow::on_buttonGetAllUsers_clicked (){
 
 
 
-    qDebug() << modelUser;
 
-      // if (!db.open()) {
-      //   QVariant errorString = "Error: Failed to connect to database:" + db.lastError().text();
-      // 	qDebug() << errorString;
-      // }
+
+
+
+
+    // int value = 23;
+
+    // QVariant a_variant1(value);
     
+    // ui->textEdit_name->setText(a_variant1.toString());
+
+
+
+
+
+
+    if(modelUser->rowCount()){
+      qDebug() << "helo";
     ui->userTableView->setModel(modelUser);
     ui->userTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
     ui->userTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -207,10 +295,13 @@ void MainWindow::on_buttonRefresh_clicked (){
 
     ui->userTableView->show();
 
+      
+    }
+    
 
     
     
-  }  
+
 }
 
 void MainWindow::deleteUser(QVector<int>& arr){
@@ -294,9 +385,23 @@ void MainWindow::on_buttonDeleteSelection_clicked (){
 void MainWindow::on_buttonTableExists_clicked (){
 
  // TODO: we should check if database and tables exist
-  QVariant result = _openDatabase();
+  DBconnectionStatus result = _openDatabase();
+  // qDebug() << result;
+  // qDebug() << result;
+  // qDebug() << result;
 
-  isUsersTableFilled = true;
+  if(result.status){    
+    // isUsersTableFilled = true;
+    QSqlDatabase db = QSqlDatabase::database("_render_connection_db");
+    QSqlQuery query(db);
+    
+    query.prepare("SELECT * FROM users");
+    query.exec();
+    
+    modelUser = new QSqlQueryModel();
+    modelUser->setQuery(query);
+  }
+
   
 }
 
@@ -308,18 +413,22 @@ void MainWindow::on_updateUser_clicked()
 
   bool var1 = false;
   QVector<QString> values;
-    if (modelCurrentItem){
+  if (modelCurrentUser){
+    // ==================================================
+
+
+    
+    qDebug() << modelCurrentUser;
+    qDebug() << modelCurrentUser->item(0,0)->text();
+    for(int i=0; i<modelCurrentUser->columnCount();i++){     
       
-      qDebug() << modelCurrentItem;
-      qDebug() << modelCurrentItem->item(0,0)->text();
-      for(int i=0; i<modelCurrentItem->columnCount();i++){
-	
-	qDebug() << "what";
-	// qDebug() << modelCurrentItem->headerData(0).toString();
-	// qDebug() << modelCurrentItem->item(0,i)->text();
-	  // arr.append(index.data().toInt());
-	values.append(modelCurrentItem->item(0,i)->text());
+      QModelIndex index = modelCurrentUser->index(0, i);
+      if(modelCurrentUser->data(index).isNull()){	
+	values.append("None");
+      }else{	
+	values.append(modelCurrentUser->item(0,i)->text());	
       }
+    }
       
       
     QSqlDatabase db = QSqlDatabase::database("_render_connection_db");
@@ -327,7 +436,7 @@ void MainWindow::on_updateUser_clicked()
 
 
     bool ok;
-    int _id = modelCurrentItem->item(0,0)->text().toInt(&ok);
+    int _id = modelCurrentUser->item(0,0)->text().toInt(&ok);
     if (!ok){
       qDebug() << "oops";
     }
@@ -345,7 +454,10 @@ void MainWindow::on_updateUser_clicked()
     }
     QSqlError error = queryUpdate.lastError();
     qDebug() << error;
-    }
+
+    
+    // ==================================================
+  }
 
 
     

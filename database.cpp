@@ -1,6 +1,10 @@
 #include <database.h>
 #include <iostream> // For error reporting
 #include <string> // Includes the standard string class
+#include <stdexcept> // For std::stoi and related exceptions
+#include <QByteArray>
+#include <QDebug>
+
 // #include <QVariant>
 
 
@@ -10,30 +14,42 @@
 
 
 
-bool isUsersTableFilled = false;
 
 
-QVariant _openDatabase(){
+// bool isUsersTableFilled = false;
+bool isDepartmentTableFilled = falseas;
+
+
+DBconnectionStatus _openDatabase(){
   
   QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL", "_render_connection_db");
 
 
-  db.setHostName("dpg-d3r4cvl6ubrc738dl0ag-a.singapore-postgres.render.com");
-  db.setPort(5432); // Default PostgreSQL port
-  db.setDatabaseName("vanilla_postgresql_2");
-  db.setUserName("vanilla_postgresql_2_user");
-  db.setPassword("oM44xjdJ6OH2Y6oYlmDDZEUTgnXDHo0M");
+
+  // QString qt_hostname = ;
+  qDebug() << "hello";
+  db.setHostName(QString::fromLocal8Bit(qgetenv("QT_HOSTNAME")));
+  bool ok;
+  qDebug() << qgetenv("QT_HOSTNAME");
+  db.setPort(qgetenv("QT_PORT").toInt(&ok, 10));
+  db.setDatabaseName(QString::fromLocal8Bit(qgetenv("QT_DATABASENAME")));
+  db.setUserName(QString::fromLocal8Bit(qgetenv("QT_USERNAME")));
+  db.setPassword(QString::fromLocal8Bit(qgetenv("QT_PASSWORD")));
+  // return {false, "oops"};
+
+      // QByteArray pathValue = qgetenv("PATH");
 
   qDebug() << "attempting to connect";
 
   if (!db.open()) {
-    QVariant errorString = "Error: Failed to connect to database:" + db.lastError().text();
-    return errorString;
+    std::string errorString = "Error: Failed to connect to database:" + db.lastError().text().toStdString();
+    qDebug() << "oops";
+    return {false, errorString};
   } else {
 
 
-    QVariant successString = "Connected to database!";
-    return successString;
+    std::string successString = "Connected to database!";
+    return {true, successString};
   }
   db.close();
 

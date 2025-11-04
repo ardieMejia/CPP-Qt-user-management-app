@@ -12,7 +12,11 @@
 
 
 extern QSqlDatabase db;
-extern bool isUsersTableFilled;
+/* extern bool isUsersTableFilled; */
 
+struct DBconnectionStatus {
+  bool status = false;
+  std::string statusString = "";
+};
 
-QVariant _openDatabase();
+DBconnectionStatus _openDatabase();
