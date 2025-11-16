@@ -1,0 +1,690 @@
+* Better links:
+** https://stuff.mit.edu/afs/athena/software/texmaker_v5.0.2/qt57/doc/qtwidgets/modelview.html
+*** 
+* Drag and drop possibly:
+** https://stackoverflow.com/questions/45077778/qtableview-qabstracttablemodel-move-rows-via-dragndrop
+** https://stackoverflow.com/questions/15906864/drag-and-drop-support-when-subclassing-from-qabstractitemmodel
+** https://doc.qt.io/qt-6/qtquick-draganddrop-example.html
+** 
+* READ THIS, FUCK YOU:
+** https://doc.qt.io/archives/qt-5.15/model-view-programming.html
+** https://doc.qt.io/archives/qt-5.15/model-view-programming.html#creating-new-models
+** https://felgo.com/doc/qt/qtquick-modelviewsdata-cppmodels/
+* To try(getting selected row):
+** First we try to understand QModelIndex:
+#+begin_src c++
+
+  #include <QCoreApplication>
+#include <QAbstractListModel>
+#include <QDebug>
+
+// Define a simple custom model
+class MyListModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    explicit MyListModel(QObject *parent = nullptr)
+        : QAbstractListModel(parent)
+    {
+        m_data << "Item 1" << "Item 2" << "Item 3";
+    }
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override
+    {
+        if (parent.isValid())
+            return 0; // For a list model, only the root has children
+        return m_data.size();
+    }
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
+    {
+        if (!index.isValid() || index.row() >= m_data.size())
+            return QVariant();
+
+        if (role == Qt::DisplayRole)
+            return m_data.at(index.row());
+        
+        return QVariant();
+    }
+
+private:
+    QStringList m_data;
+};
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    MyListModel model;
+
+    // Create a QModelIndex for the first item (row 0, column 0, parent is invalid/root)
+    QModelIndex index0 = model.index(0, 0, QModelIndex()); 
+    if (index0.isValid()) {
+        qDebug() << "Data at index0:" << model.data(index0, Qt::DisplayRole).toString();
+        qDebug() << "Row of index0:" << index0.row();
+        qDebug() << "Column of index0:" << index0.column();
+        qDebug() << "Is index0 valid?" << index0.isValid();
+    }
+
+    // Create a QModelIndex for the second item (row 1, column 0)
+    QModelIndex index1 = model.index(1, 0, QModelIndex());
+    if (index1.isValid()) {
+        qDebug() << "Data at index1:" << model.data(index1, Qt::DisplayRole).toString();
+    }
+
+    // Example of an invalid QModelIndex
+    QModelIndex invalidIndex = model.index(99, 0, QModelIndex()); // Out of bounds
+    qDebug() << "Is invalidIndex valid?" << invalidIndex.isValid();
+
+    return a.exec();
+}
+
+#+end_src
+** Then we try to understand getting it from selection.
+** Lesson: QItemSelectionModel is part of the View rather than the Data Model, in our case, thats the .ui file
+#+begin_src c++
+
+  #include <QTableView>
+#include <QStandardItemModel>
+#include <QItemSelectionModel>
+#include <QDebug>
+
+// Assuming 'tableView' is a pointer to your QTableView instance
+QTableView* tableView = new QTableView(); 
+// ... (populate tableView with a model, e.g., QStandardItemModel)
+
+// Get the selection model
+QItemSelectionModel* selectionModel = tableView->selectionModel();
+
+// Get the QModelIndex of the currently selected cell
+QModelIndex selectedIndex = selectionModel->currentIndex();
+
+// Now you can use 'selectedIndex' to access information about the selected cell
+if (selectedIndex.isValid()) {
+    qDebug() << "Selected row:" << selectedIndex.row();
+    qDebug() << "Selected column:" << selectedIndex.column();
+    qDebug() << "Data at selected cell:" << selectedIndex.data().toString();
+} else {
+    qDebug() << "No cell is currently selected.";
+}
+
+#+end_src
+* Try using Roles to turn on or off dispay of data using clicks
+** MyModel.h
+#+begin_src c++
+
+  #ifndef MYMODEL_H
+#define MYMODEL_H
+
+#include <QAbstractListModel>
+#include <QVariant>
+#include <QList>
+
+struct MyItemData {
+    QString text;
+    bool visible;
+};
+
+class MyModel : public QAbstractListModel
+{
+    Q_OBJECT
+
+public:
+    explicit MyModel(QObject *parent = nullptr);
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+
+    // Custom role for visibility
+    enum CustomRoles {
+        VisibilityRole = Qt::UserRole + 1
+    };
+
+    void toggleVisibility(const QModelIndex &index);
+
+private:
+    QList<MyItemData> m_data;
+};
+
+#endif // MYMODEL_H
+
+#+end_src
+** MyModel.cpp
+#+begin_src c++
+
+  #include "MyModel.h"
+
+MyModel::MyModel(QObject *parent) : QAbstractListModel(parent)
+{
+    m_data << MyItemData{"Item 1", true} << MyItemData{"Item 2", true} << MyItemData{"Item 3", true};
+}
+
+int MyModel::rowCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent);
+    return m_data.size();
+}
+
+QVariant MyModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid() || index.row() >= m_data.size())
+        return QVariant();
+
+    const MyItemData &item = m_data.at(index.row());
+
+    if (role == Qt::DisplayRole) {
+        if (item.visible) {
+            return item.text;
+        } else {
+            return QVariant(); // Return empty QVariant to hide the text
+        }
+    } else if (role == VisibilityRole) {
+        return item.visible;
+    }
+
+    return QVariant();
+}
+
+bool MyModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid() || index.row() >= m_data.size())
+        return false;
+
+    MyItemData &item = m_data[index.row()];
+
+    if (role == VisibilityRole) {
+        bool newVisibility = value.toBool();
+        if (item.visible != newVisibility) {
+            item.visible = newVisibility;
+            emit dataChanged(index, index, {Qt::DisplayRole, VisibilityRole}); // Notify view of change
+            return true;
+        }
+    } else if (role == Qt::EditRole) {
+        item.text = value.toString();
+        emit dataChanged(index, index, {Qt::DisplayRole});
+        return true;
+    }
+
+    return false;
+}
+
+void MyModel::toggleVisibility(const QModelIndex &index)
+{
+    if (index.isValid() && index.row() < m_data.size()) {
+        bool currentVisibility = data(index, VisibilityRole).toBool();
+        setData(index, !currentVisibility, VisibilityRole);
+    }
+}
+
+#+end_src
+** MainWindow.h
+#+begin_src c++
+
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <QMainWindow>
+#include <QListView>
+#include "MyModel.h"
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private slots:
+    void onItemClicked(const QModelIndex &index);
+
+private:
+    QListView *m_listView;
+    MyModel *m_model;
+};
+
+#endif // MAINWINDOW_H
+
+#+end_src
+** Mainwindow.cpp
+#+begin_src c++
+
+  #include "MainWindow.h"
+#include <QVBoxLayout>
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+{
+    QWidget *centralWidget = new QWidget(this);
+    setCentralWidget(centralWidget);
+
+    QVBoxLayout *layout = new QVBoxLayout(centralWidget);
+
+    m_listView = new QListView(this);
+    m_model = new MyModel(this);
+    m_listView->setModel(m_model);
+
+    layout->addWidget(m_listView);
+
+    connect(m_listView, &QListView::clicked, this, &MainWindow::onItemClicked);
+}
+
+MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::onItemClicked(const QModelIndex &index)
+{
+    m_model->toggleVisibility(index);
+}
+
+
+
+#+end_src
+** main.cpp
+#+begin_src c++
+
+
+  #include <QApplication>
+#include "MainWindow.h"
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+    return a.exec();
+}
+
+
+#+end_src
+* TEMP: brain damaging practice
+** creating a class and a object pointer to a class (this is not what we are trying to do)
+#+begin_src c++
+  
+  
+  #include <iostream>
+
+  using namespace std;
+
+  class Box{
+  public:
+    Box(double l, double w, double h){
+      cout << "constructor called" << endl;
+      length = l;
+      width = w;
+      height = h;
+    }
+    double Volume(){
+      return length * width * height;
+    }
+
+  private:
+    // why on earth is it like this, and NOT like Python??
+    double length;
+    double width;
+    double height;
+  };
+
+  // this is all just TODOs
+  // remember that C++ has no awareness of array size,
+  // also remember that C++ is stupid and needs to be told that its type must be explicit
+  // another thing, is that C++ pointers the stars can be put at (after) the type, or (before) the var name itself
+  // also C++ doesnt have string or string-awareness in the traditional sense
+  // a string is a just a pointer to a char
+  void main(int argv, char *argv[]){
+    // declaration often doesnt have equals signs
+    // notice -> stupid sense, UNINTUITIVE, "looks likes a function but not a function"
+    Box Box1(1.2,1.3,1.5);
+    Box Box2(3.4,7.8,3.7);
+    Box *ptrBox; // wait, we can do this? Again, C++ cant decide what kind of language it wants to be
+
+    ptrBox = &Box1;
+
+    cout << "Volume of Box1" << ptrBox->Volume() << endl; // at least this one makes sense;
+  
+  
+  }
+
+
+
+  
+
+#+end_src
+** all the constructors from [[https://www.programiz.com/cpp-programming/constructors][this link]]
+#+begin_src c++
+
+
+
+  using namespace std;
+
+  class Wall{
+  public:
+    Wall(double l, double w){
+      length = l;
+      width = w;    
+    }
+  private:
+    double length;
+    double width;
+  };
+
+  // so again, C++ is stupid, has no awareness of array size, has no string, and string is a pointer to char
+  // also, no stupid standard with pointer declaration
+  //
+  void main(int argv, int* argc[]){
+
+    // again, declaration of object, has a function that doesnt look like a function
+    Wall my_wall(12.4, 14.3);
+
+  }
+
+  // ========================================
+  // ========================================
+
+
+
+
+
+
+  using namespace std;
+
+  class Wall{
+  public:
+    // a colon isnt just for member initializer list
+    // its also for a default value for contructors with no parameters
+    // kicker! -> why is there no need for "tell stupid C++ the exact type needed"
+    // again -> a "looks like a function, not a function"
+    Wall(): length(5.5), width(4.4){
+      length = l;
+      width = w;    
+    }
+  private:
+    double length;
+    double width;
+  };
+
+  void main(int argv, int* argc[]){
+
+    Wall my_wall(12.4, 14.3);
+
+  }
+
+
+  // ========================================
+  // ========================================
+
+  // all SENSE and LOGIC is lost, as we are introduced to "defaulted constructor".
+  // this is quite ugly, becoz now initialization is NOT a "looks like a function not a function"
+
+  using namespace std;
+
+  class Wall{
+  public:
+    Wall() = default;
+  private:
+    double length{5.5};
+    double width{4.4};
+  };
+
+  void main(int argv, int* argc[]){
+
+    Wall my_wall(12.4, 14.3);
+
+  }
+
+  // ========================================
+  // ========================================
+
+  // member initializer list
+  // so turns out, the curlies are replacements for assignments =
+  // it "makes sense" now I guess
+  // but now curlies are more than just "function body"
+  // so this is still ugly
+
+
+  using namespace std;
+
+  class Wall{
+  public:
+    Wall(double l, double w)
+      : length{l}
+      , width{w}
+    {}
+  private:
+    double length{5.5};
+    double width{4.4};
+  };
+
+  void main(int argv, int* argc[]){
+
+    Wall my_wall(12.4, 14.3);
+
+  }
+
+
+  // ========================================
+  // ========================================
+
+
+
+
+  using namespace std;
+
+  class Wall{
+  public:
+    Wall(double l, double w)
+      : length{l}
+      , width{w}
+    {}
+    // becoz C++ is a stupid language that cant decide to be "functional" and doesnt know what to do with the argument passed
+    // we need to remind C++ to NOT change the value.
+    // "makes sense", becoz default -> "dont change global var passed but value"
+    // const is optional, but its good addition, as a synctatic sugar to enforce design principle at language level
+    // becoz pass by reference is easy to forget
+    // copy constructor below allows us to "copy 1 object to another"
+    Wall(const Wall& wall)
+      : length{wall.length}
+      , width{wall.width}
+    {}
+  private:
+    double length{5.5};
+    double width{4.4};
+  };
+
+  void main(int argv, int* argc[]){
+
+    Wall my_wall(12.4, 14.3);
+
+    // "copy 1 object to another"
+    Wall my_wall2 = my_wall;
+
+  }
+
+  // ========================================
+  // ========================================
+
+  // actually the above allows to add more behaviour, C++ has its default copy constructor,
+  // no need to define copy constructor, this will still work
+
+  Wall my_wall2 = my_wall;
+  
+#+end_src
+* Finally a good blog that explains Qt C++ model-view properly, and why we have Q---model, Q---view, Q---widget
+** [[https://www.bogotobogo.com/Qt/Qt5_QListView_QStringListModel_ModelView_MVC.php][bogotobogo blog]]
+** [[https://woboq.com/codebrowser.html][insane code browser]]
+** [[https://www.qtcentre.org/threads/67116-How-to-use-a-slot-in-Qt-like-a-function-in-C][since we are still learning signals and slots]]
+** [[https://samdutton.wordpress.com/2008/10/03/debugging-signals-and-slots-in-qt/][sam dutton Debugging signals and slots]]
+* We need to do this one for SQL queries!!
+** https://doc.qt.io/qt-6/qtwidgets-richtext-orderform-example.html
+* we finally understand Qt's stupid way of doing things, a lot of set__ functions, so now we can finally do a real update
+#+begin_src c++
+
+  #include <QCoreApplication>
+#include <QSqlDatabase>
+#include <QSqlTableModel>
+#include <QDebug>
+
+// Helper function to create a connection and some test data
+bool createConnection() {
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(":memory:"); // Use an in-memory database for demonstration
+    if (!db.open()) {
+        qDebug() << "Cannot open database:" << db.lastError().text();
+        return false;
+    }
+
+    QSqlQuery query;
+    query.exec("CREATE TABLE employees (id INTEGER PRIMARY KEY, name VARCHAR(50), salary INTEGER)");
+    query.exec("INSERT INTO employees (name, salary) VALUES ('Alice', 50000)");
+    query.exec("INSERT INTO employees (name, salary) VALUES ('Bob', 60000)");
+    return true;
+}
+
+int main(int argc, char *argv[]) {
+    QCoreApplication app(argc, argv);
+
+    if (!createConnection()) {
+        return 1;
+    }
+
+    QSqlTableModel model;
+    model.setTable("employees");
+    model.setEditStrategy(QSqlTableModel::OnManualSubmit); // Set manual submission strategy
+    model.select(); // Populate the model with data from the table
+
+    qDebug() << "Initial data:";
+    for (int i = 0; i < model.rowCount(); ++i) {
+        qDebug() << "ID:" << model.data(model.index(i, 0)).toInt()
+                 << "Name:" << model.data(model.index(i, 1)).toString()
+                 << "Salary:" << model.data(model.index(i, 2)).toInt();
+    }
+
+    // --- Update a record ---
+    // Find the index of the record to update (e.g., the first record)
+    QModelIndex indexToUpdate = model.index(0, 0); // Row 0, Column 0 (ID)
+
+    // Modify a field in that record (e.g., change Alice's salary)
+    int rowToModify = 0;
+    int salaryColumn = 2; // Assuming salary is the third column (index 2)
+    QModelIndex salaryIndex = model.index(rowToModify, salaryColumn);
+    model.setData(salaryIndex, 55000); // Set new salary
+
+    qDebug() << "\nData after modification (before submit):";
+    for (int i = 0; i < model.rowCount(); ++i) {
+        qDebug() << "ID:" << model.data(model.index(i, 0)).toInt()
+                 << "Name:" << model.data(model.index(i, 1)).toString()
+                 << "Salary:" << model.data(model.index(i, 2)).toInt();
+    }
+
+    // --- Submit the changes to the database ---
+    if (model.submitAll()) {
+        qDebug() << "\nChanges submitted successfully.";
+    } else {
+        qDebug() << "\nFailed to submit changes:" << model.lastError().text();
+    }
+
+    // Re-select to refresh the model and see the committed changes
+    model.select();
+
+    qDebug() << "\nData after submit and re-select:";
+    for (int i = 0; i < model.rowCount(); ++i) {
+        qDebug() << "ID:" << model.data(model.index(i, 0)).toInt()
+                 << "Name:" << model.data(model.index(i, 1)).toString()
+                 << "Salary:" << model.data(model.index(i, 2)).toInt();
+    }
+
+    return app.exec();
+}
+
+#+end_src
+* Qt's set__ is rather annoying, and too much abstraction, instead we do Q StandardItemModel again, like [[https://forum.qt.io/topic/78028/is-it-possible-to-convert-a-qsqlquery-model-to-a-qsqltablemodel/7][this guy]]
+#+begin_src c++
+
+  void DbManager::boxList(Ui::MainWindow* ui){
+
+    QSqlQuery* query=new QSqlQuery(mydb);
+    query->prepare("select `boxID`,`boxName`,`boxLocation` from `boxes`");
+    query->exec();
+    modelBox= new QStandardItemModel(sqlSize(query), 3);
+    int i=0;
+    while (query->next())
+      {
+        modelBox->setData(modelBox->index(i, 0), query->value("boxID"));
+        modelBox->setData(modelBox->index(i, 1), query->value("boxName"));
+        modelBox->setData(modelBox->index(i, 2), query->value("boxLocation"));
+        i++;
+      }
+    modelBox->setHeaderData(1, Qt::Horizontal, QObject::tr("Box ID / Name"));
+    modelBox->setHeaderData(2, Qt::Horizontal, QObject::tr("Box Location"));
+    ui->boxTable->setModel(modelBox);
+    ui->boxTable->setColumnHidden(0, true);
+  }
+
+
+#+end_src
+* but we use bind values, coz the syntax is a bit confusing
+#+begin_src c++
+
+  updateQuery.prepare("UPDATE users SET email = :newEmail WHERE id = :userId");
+
+  // 4. Bind the new value and the WHERE clause value
+  updateQuery.bindValue(":newEmail", "john.newemail@example.com");
+  updateQuery.bindValue(":userId", 1);
+  
+
+#+end_src
+* Our data is depressng, we need more data, CSV DOWNLOAD:
+** get full path
+#+begin_src c++
+
+  #include <QFileDialog>
+  #include <QString>
+
+  // ... inside a slot or function ...
+  QString fileName = QFileDialog::getOpenFileName(this,
+                                                  tr("Open CSV File"),
+                                                  QDir::homePath(), // Initial directory
+                                                  tr("CSV Files (*.csv);;All Files (*)") // Filter
+                                                  );
+  if (fileName.isEmpty()) {
+    // User cancelled file selection
+    return;
+   }
+  // fileName now holds the path to the selected CSV file
+  
+
+#+end_src
+** create qfile object, with builtin checks:
+#+begin_src c++
+
+    #include <QFile>
+    #include <QDebug> // For logging errors
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Error opening file:" << file.errorString();
+        return;
+    }
+    // File is open and ready to be read
+  
+#+end_src
+** Read liny by line
+#+begin_src c++
+
+  #include <QTextStream>
+  #include <QStringList>
+
+  QTextStream in(&file);
+  while (!in.atEnd()) {
+    QString line = in.readLine();
+    QStringList fields = line.split(','); // Split by comma for standard CSV
+      // Process 'fields' - e.g., store in a data structure, populate a QTableWidget, etc.
+      // Be mindful of potential issues like commas within quoted fields or different delimiters.
+  }
+  file.close();
+
+#+end_src
+* We successfully our QStyledItemDelegate using the following non-AI sources.
+** [[https://wiki.qt.io/Combo_Boxes_in_Item_Views][wiki example with QComboBox as the QStyledItemDelegate]]
+** [[https://doc.qt.io/qt-6/model-view-programming.html][official doc again, with QSpinBox as QStyledItemDelegate. Also, this is the same of model-view-prgogramming]]
