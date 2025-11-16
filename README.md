@@ -1,0 +1,1 @@
+# CPP-Qt-chess-players-management
