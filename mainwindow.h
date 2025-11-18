@@ -40,7 +40,9 @@ private slots:
   void deleteUser(QVector<int> &arr);
   void viewGetUpdate(const QModelIndex &index);
   void on_insertUserDialog_clicked();
-  void on_updateUser_clicked();
+
+  void _on_updateUser_clicked();
+
 
 public slots:
   void test_function(int index);
