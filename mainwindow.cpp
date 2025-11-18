@@ -286,16 +286,19 @@ void MainWindow::on_buttonGetAllUsers_clicked (){
 
 
 
-    if(modelUser->rowCount()){
-      qDebug() << "helo";
-    ui->userTableView->setModel(modelUser);
-    ui->userTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
-    ui->userTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    // ui->userTableView->doubleClicked.connect(viewGetUpdate);
+  if(modelUser){
+      
+      if(modelUser->rowCount()){
+	qDebug() << "helo";
+	ui->userTableView->setModel(modelUser);
+	ui->userTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
+	ui->userTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+	// ui->userTableView->doubleClicked.connect(viewGetUpdate);
 
-    ui->userTableView->show();
+	ui->userTableView->show();
 
       
+      }
     }
     
 
@@ -408,13 +411,13 @@ void MainWindow::on_buttonTableExists_clicked (){
 
 
 
-void MainWindow::on_updateUser_clicked()
+void MainWindow::_on_updateUser_clicked()
 {
 
   bool var1 = false;
   QVector<QString> values;
   if (modelCurrentUser){
-    // ==================================================
+
 
 
     
@@ -456,14 +459,13 @@ void MainWindow::on_updateUser_clicked()
     qDebug() << error;
 
     
-    // ==================================================
+
   }
 
 
     
 
   qDebug() << "here we know";
-
 
   
 }
