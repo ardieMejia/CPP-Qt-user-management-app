@@ -14,9 +14,13 @@
 extern QSqlDatabase db;
 /* extern bool isUsersTableFilled; */
 
+
 struct DBconnectionStatus {
-  bool status = false;
-  std::string statusString = "";
+  bool status;
+  std::string statusString;
 };
+
+/* extern DBconnectionStatus g_current_connection_status; */
+
 
 DBconnectionStatus _openDatabase();

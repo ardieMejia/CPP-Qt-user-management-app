@@ -142,16 +142,6 @@
      <string>Insert User Window</string>
     </property>
    </widget>
-   <widget class="QTableView" name="userUpdateView">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>410</y>
-      <width>341</width>
-      <height>141</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="updateUser">
     <property name="geometry">
      <rect>

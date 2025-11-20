@@ -21,6 +21,8 @@
 #include <QSpinBox>
 // #include <QSqlRecord>
 #include "insertuserwindow.h"
+#include "insertdeptwindow.h"
+#include "userupdatewidget.h"
 
 
 
@@ -64,6 +66,13 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+  DBconnectionStatus g_current_connection_status;
+
+  g_current_connection_status.status = false;
+  g_current_connection_status.statusString = "";
+  
+  g_current_connection_status = _openDatabase();
+
 
   connect(ui->comboBox_ssync, QOverload<int>::of(&QComboBox::currentIndexChanged), this, QOverload<int>::of(&MainWindow::test_function));
   connect(ui->textEdit_ssync, &QTextEdit::textChanged, this, &MainWindow::test_text_edit);
@@ -79,6 +88,9 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->userTableView, &QTableView::doubleClicked, this, &MainWindow::viewGetUpdate);
 
 
+  // // QTableWidget *myTableUserWidget = ui->tableUserWidget;
+  // ui->tableUserWidget->setModel(model2); 
+  // ui->tableUserWidget->show(); 
 
 
 
@@ -109,96 +121,27 @@ void MainWindow::on_pushButton_clicked(){
 
 
 
-// static void fill_a_text()
-// {
-  // ui->label->setText("New Text After Button Click"); // Change the label text
-// }
+void MainWindow::viewGetUpdate(const QModelIndex &index){
 
-
-myTestDelegate::myTestDelegate(QObject *parent) : QStyledItemDelegate(parent)
-{
-    qDebug() << "myTestDelegate created";
-}
-
-myTestDelegate::~myTestDelegate()
-{
-    qDebug() << "ClassA destroyed";
-}
-
-
-// ==================================================
-// ==================================================
-
-QWidget *myTestDelegate::createEditor(QWidget *parent,
-                                       const QStyleOptionViewItem &option,
-                                       const QModelIndex &index) const
-{
-
-  
-  QComboBox *editor = new QComboBox(parent);
-  QString var1 = QString("asd");
-  QStringList var2;
-  var2 << "asd" << "asd";
-  QString var3 =  var2.join(QString(","));
-  for (QString &item : var2){
-    editor->addItem(item);
+  if (modelUser->rowCount()){
+    QSqlRecord recordUser;
+    recordUser = modelUser->record(index.row());
+    bool ok;
+    UserUpdateWidget *userupdatewidget = new UserUpdateWidget(this, modelUser->record(index.row()).field("id").value().toInt(&ok));
+    
+    userupdatewidget->setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+    userupdatewidget->show();
+    
   }
 
-  
-  
-  
-  return editor;
-}
-
-
-void myTestDelegate::setEditorData(QWidget *editor,
-                                    const QModelIndex &index) const
-{
-  // int value = index.data(Qt::EditRole).toInt();
-  
-  // QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
-  // spinBox->setValue(value);
-
-  QComboBox *cb = qobject_cast<QComboBox *>(editor);
-
-  cb->setCurrentIndex(0);
-}
-
-void myTestDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-				  const QModelIndex &index) const
-{
-  // QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
-  // spinBox->interpretText();
-  //   int value = spinBox->value();
     
-  //   model->setData(index, value, Qt::EditRole);
-
-  QComboBox *cb = qobject_cast<QComboBox *>(editor);
-
-  model->setData(index, cb->currentText(), Qt::EditRole);
-//   QString underscore = "__";
-//   QString total ="";
-//   total += underscore;
-//   total += cb->currentText();
-//   model->setData(index, total, Qt::DisplayRole);
+  
 }
 
-// QWidget *ComboBoxItemDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
-// {
-//     // Create the combobox and populate it
-//     QComboBox *cb = new QComboBox(parent);
-//     const int row = index.row();
-//     cb->addItem(QString("one in row %1").arg(row));
-//     cb->addItem(QString("two in row %1").arg(row));
-//     cb->addItem(QString("three in row %1").arg(row));
-//     return cb;
-// }
 
-// ==================================================
-// ==================================================
-  
 
-void MainWindow::viewGetUpdate(const QModelIndex &index){
+
+void MainWindow::_viewGetUpdate(const QModelIndex &index){
   qDebug() << "some tests";
 
   QStringList list_;
@@ -230,35 +173,35 @@ void MainWindow::viewGetUpdate(const QModelIndex &index){
 
     
     modelCurrentUser = new QStandardItemModel(1, recordUser.count());
-    // QTableView *modelTableUser = new QTableView();
-
-
-    for (int column = 0; column < 3; column++){
-      modelCurrentUser->setHeaderData(column, Qt::Horizontal, recordUser.fieldName(column));
-      QSqlField fieldSql = recordUser.field(column);
-      QString stringField = fieldSql.value().toString();
-      QStandardItem *item = new QStandardItem(stringField);
-      modelCurrentUser->setItem(0,column,item);
-    }
-    
-    ui->userUpdateView->setModel(modelCurrentUser);
-    ui->userUpdateView->setEditTriggers(QAbstractItemView::DoubleClicked);     
-      // setSelectionBehavior(QAbstractItemView::SelectRows);
-
-    myTestDelegate* myEditor = new myTestDelegate(ui->userUpdateView);
-
-    ui->userUpdateView->setItemDelegateForColumn(1, myEditor);
-    
-    // QSqlTableModel modelTableUser;
-    // modelTableUser.setRecord(0,recordUser);
-
 
 
 
 
     
+    // mapper = new QDataWidgetMapper(this);
+    // mapper->setModel(model);
+    // mapper->addMapping(nameEdit, 0);
+    // mapper->addMapping(addressEdit, 1);
+    // mapper->addMapping(typeComboBox, 2, "currentIndex");
 
+
+
+    // for (int column = 0; column < 3; column++){
+    //   modelCurrentUser->setHeaderData(column, Qt::Horizontal, recordUser.fieldName(column));
+    //   QSqlField fieldSql = recordUser.field(column);
+    //   QString stringField = fieldSql.value().toString();
+    //   QStandardItem *item = new QStandardItem(stringField);
+    //   modelCurrentUser->setItem(0,column,item);
+    // }
     
+    // ui->userUpdateView->setModel(modelCurrentUser);
+    // ui->userUpdateView->setEditTriggers(QAbstractItemView::DoubleClicked);     
+
+    // myTestDelegate* myEditor = new myTestDelegate(ui->userUpdateView);
+
+    // ui->userUpdateView->setItemDelegateForColumn(1, myEditor);
+    
+
   }
 
   
@@ -388,12 +331,15 @@ void MainWindow::on_buttonDeleteSelection_clicked (){
 void MainWindow::on_buttonTableExists_clicked (){
 
  // TODO: we should check if database and tables exist
-  DBconnectionStatus result = _openDatabase();
+  // DBconnectionStatus result = _openDatabase();
   // qDebug() << result;
   // qDebug() << result;
   // qDebug() << result;
 
-  if(result.status){    
+  // defining is a f***ing misnomer, f*** you C++
+  DBconnectionStatus g_current_connection_status;
+
+  if(g_current_connection_status.status){    
     // isUsersTableFilled = true;
     QSqlDatabase db = QSqlDatabase::database("_render_connection_db");
     QSqlQuery query(db);
@@ -518,6 +464,12 @@ void MainWindow::test_text_edit()
 void MainWindow::on_insertUserDialog_clicked(){
   InsertUserWindow *insertuserwindow = new InsertUserWindow(this);
   insertuserwindow->show();
+}
+
+
+void MainWindow::on_insertDepartmentDialog_clicked(){
+  InsertDeptWindow *insertdeptwindow = new InsertDeptWindow(this);
+  insertdeptwindow->show();
 }
 
 

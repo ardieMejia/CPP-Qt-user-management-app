@@ -8,7 +8,7 @@
 #include <QSqlRecord>
 #include <QVariant>
 #include <QStandardItemModel>
-#include <QStyledItemDelegate>
+
 
 // #include <QDebug>
 
@@ -18,6 +18,9 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -39,7 +42,9 @@ private slots:
   void on_buttonTableExists_clicked();
   void deleteUser(QVector<int> &arr);
   void viewGetUpdate(const QModelIndex &index);
+  void _viewGetUpdate(const QModelIndex &index);
   void on_insertUserDialog_clicked();
+  void on_insertDepartmentDialog_clicked();
   void _on_updateUser_clicked();
 
 public slots:
@@ -68,23 +73,13 @@ private:
 
 
 
-// ==================== attempt at using 2 parent classes into one
 
 
 
-class myTestDelegate : public QStyledItemDelegate
-{
-    Q_OBJECT
-public:
-    myTestDelegate(QObject *parent = nullptr);
-    ~myTestDelegate();
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
-    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override;
-};
 
-// ==================== attempt at using 2 parent classes into one
+
+
 
 
 

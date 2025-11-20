@@ -688,3 +688,4 @@ int main(int argc, char *argv[]) {
 * We successfully our QStyledItemDelegate using the following non-AI sources.
 ** [[https://wiki.qt.io/Combo_Boxes_in_Item_Views][wiki example with QComboBox as the QStyledItemDelegate]]
 ** [[https://doc.qt.io/qt-6/model-view-programming.html][official doc again, with QSpinBox as QStyledItemDelegate. Also, this is the same of model-view-prgogramming]]
+* we need to [[https://doc.qt.io/qt-6/qdatawidgetmapper.html#addMapping][qdatawidgetmapper]]
