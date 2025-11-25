@@ -25,11 +25,13 @@ class UserUpdateWidget : public QWidget
   Q_OBJECT
   
 public:
-  UserUpdateWidget(QWidget *parent = nullptr, int indexDepartment = -1);
+  UserUpdateWidget(QWidget *parent = nullptr, int userId = -1);
   ~UserUpdateWidget();
 
 
-/* private slots: */
+private slots:
+  void on_UserUpdateButton_clicked();
+  void updateUser();
 
 
 /* public slots: */
@@ -43,7 +45,7 @@ private:
   QStandardItemModel *modelCombo2;
   QSqlQueryModel *modelDepartment;
   QSqlQueryModel *modelUser;
-  int m_indexDepartment;
+  int m_userId;
 
 
 
