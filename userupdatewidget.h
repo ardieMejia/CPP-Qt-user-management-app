@@ -7,6 +7,7 @@
 #include <QSqlRecord>
 #include <QSqlField>
 #include <QSqlQuery>
+#include <QStandardItemModel>
 
 // #include <QDebug>
 
@@ -38,7 +39,8 @@ public:
 
 private:
   Ui::UserUpdateWidget *ui;
-  QStringListModel *testModel;
+  QStringListModel *modelCombo1;
+  QStandardItemModel *modelCombo2;
   QSqlQueryModel *modelDepartment;
   QSqlQueryModel *modelUser;
   int m_indexDepartment;

@@ -14,7 +14,6 @@
 
 
 DBconnectionStatus g_current_connection_status = {false, ""};
-// DBconnectionStatus g_current_connection_status.statusString = "";
 
 
 
@@ -22,7 +21,9 @@ DBconnectionStatus g_current_connection_status = {false, ""};
 
 
 
-// bool isUsersTableFilled = false;
+
+
+
 
 bool isDepartmentTableFilled = false;
 

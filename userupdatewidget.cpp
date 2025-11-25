@@ -17,12 +17,6 @@ UserUpdateWidget::UserUpdateWidget(QWidget *parent, int indexDepartment)
 
 
 
-  // testModel = new QStringListModel(this);
-  // QStringList list2;
-  // list2 << "Hanifa" << "Bev" << "Ardie";
-  // testModel->setStringList(list2);
-  
-  // ui->tableSingleUserView->setModel(testModel);
 
 
 
@@ -44,11 +38,8 @@ UserUpdateWidget::UserUpdateWidget(QWidget *parent, int indexDepartment)
     
     QSqlQuery queryUser(db);
     
-    // queryUser.prepare("SELECT  FROM users");
 
     queryUser.prepare("SELECT * FROM users WHERE id = :id");
-    // queryUser.bindValue(":name", values.at(1));
-    // queryUser.bindValue(":age", values.at(2));
     qDebug() << indexDepartment;
     queryUser.bindValue(":id", indexDepartment);
 
@@ -61,15 +52,11 @@ UserUpdateWidget::UserUpdateWidget(QWidget *parent, int indexDepartment)
 
 
     
-    // testModel = new QStringListModel(this);
-    // QStringList list2;
-    // list2 << "Hanifa" << "Bev" << "Ardie";
-    // testModel->setStringList(list2);
+
     
     ui->userNameLineEdit->setText(modelUser->record(0).field("name").value().toString());
 
-    // QAbstractItemModel *testmodel = index.model();
-    // testModel = new QAbstractItemModel();
+
 
     
       
@@ -78,22 +65,31 @@ UserUpdateWidget::UserUpdateWidget(QWidget *parent, int indexDepartment)
       // setText(modelUser->record(0).field("name").value().toString());
     
 
-    qDebug() << modelDepartment->rowCount();
-    
-    testModel = new QStringListModel(this);
-    
+
+    // ===== old simple example
+    modelCombo1 = new QStringListModel(this);    
     QStringList list2;
     for(int i=0; i < modelDepartment->rowCount();i++){
-      list2 << "Hanifa";      
+      list2 << modelDepartment->record(i).field("department_name").value().toString();
+    }
+    modelCombo1->setStringList(list2);
+    ui->userDepartmentComboBox->setModel(modelCombo1);
+    ui->userDepartmentComboBox->setCurrentIndex(2);
+    // ===== old simple example
+
+
+
+    modelCombo2 = new QStandardItemModel(this);
+    for(int i=0; i < modelDepartment->rowCount();i++){
+      QString itemDeptName;
+      int itemId;
+      itemDeptName = modelDepartment->record(i).field("department_name").value().toString();
+      itemId = modelDepartment->record(i).field("id").value().toInt();
+      modelCombo2->appendRow(new QStandardItem(itemDeptName));
+      modelCombo2->setData(modelCombo2->index(0, 0), itemId, Qt::UserRole); // Store a custom ID
     }
 
-    testModel->setStringList(list2);
 
-    // ui->userDepartmentComboBox->setItemText(0,"asd");
-    // ui->userDepartmentComboBox->setCurrentIndex(0);
-
-    ui->userDepartmentComboBox->setModel(testModel);
-    ui->userDepartmentComboBox->setCurrentIndex(2);    
     
 
     
