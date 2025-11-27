@@ -8,7 +8,7 @@
 #include <QSqlRecord>
 #include <QVariant>
 #include <QStandardItemModel>
-
+#include <QAbstractTableModel>
 
 // #include <QDebug>
 
@@ -53,7 +53,7 @@ public slots:
   void test_text_edit();
   
 
-
+  
 private:
   Ui::MainWindow *ui;
   QLabel *myLabel;
@@ -61,6 +61,7 @@ private:
   QStringListModel *model2;
   QSqlQueryModel *modelUser;
   QString textInput_model;
+  QStandardItemModel *modelUserTable;
   // QAbstractItemModel *testmodel;
 
   QStandardItemModel *modelCurrentUser;
@@ -71,7 +72,6 @@ private:
 
 
 };
-
 
 
 
