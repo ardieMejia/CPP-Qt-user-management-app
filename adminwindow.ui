@@ -14,21 +14,11 @@
    <string>AdminWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTextEdit" name="textEdit">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>20</y>
-      <width>161</width>
-      <height>61</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>20</y>
+      <x>190</x>
+      <y>60</y>
       <width>174</width>
       <height>169</height>
      </rect>
@@ -40,23 +30,13 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="text">
-     <string>my name is peter parker</string>
+     <string>Drop and Recreate DB in menubar above</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+     <set>Qt::AlignCenter</set>
     </property>
-   </widget>
-   <widget class="QPushButton" name="temp">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>110</y>
-      <width>151</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>temp</string>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

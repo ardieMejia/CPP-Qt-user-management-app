@@ -1,3 +1,5 @@
+#ifndef DATABASE_H
+#define DATABASE_H
 #pragma once // Ensures the header is included only once
 
 
@@ -14,9 +16,16 @@
 extern QSqlDatabase db;
 /* extern bool isUsersTableFilled; */
 
+
 struct DBconnectionStatus {
-  bool status = false;
-  std::string statusString = "";
+  bool status;
+  std::string statusString;
 };
 
+extern DBconnectionStatus g_current_connection_status;
+
+
 DBconnectionStatus _openDatabase();
+
+
+#endif

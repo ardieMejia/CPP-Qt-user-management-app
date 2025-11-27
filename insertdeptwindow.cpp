@@ -33,8 +33,8 @@ InsertDeptWindow::~InsertDeptWindow()
 
 void InsertDeptWindow::on_insertDept_clicked(){
 
-  DBconnectionStatus resultString = _openDatabase();
-  qDebug() << QString::fromStdString(resultString.statusString);
+
+
   QSqlDatabase db = QSqlDatabase::database("_render_connection_db");
   QSqlQuery query(db);
   query.prepare("INSERT INTO departments (department_name) "

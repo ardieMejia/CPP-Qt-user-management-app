@@ -33,8 +33,7 @@ InsertUserWindow::~InsertUserWindow()
 
 void InsertUserWindow::on_insertUser_clicked(){
 
-  DBconnectionStatus resultString = _openDatabase();
-  qDebug() << QString::fromStdString(resultString.statusString);
+  
   QSqlDatabase db = QSqlDatabase::database("_render_connection_db");
   QSqlQuery query(db);
   query.prepare("INSERT INTO users (name, age) "
@@ -49,6 +48,14 @@ void InsertUserWindow::on_insertUser_clicked(){
   // if (result){
   //   isUsersTableFilled = true;
   // }
+
+  if(result){
+    qDebug() << "fine";
+  }
+  QSqlError error = query.lastError();
+  qDebug() << error;
+
+  
 }
 
 

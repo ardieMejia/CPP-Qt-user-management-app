@@ -13,11 +13,20 @@
 
 
 
+DBconnectionStatus g_current_connection_status = {false, ""};
 
 
 
-// bool isUsersTableFilled = false;
-bool isDepartmentTableFilled = falseas;
+
+
+
+
+
+
+
+
+bool isDepartmentTableFilled = false;
+
 
 
 DBconnectionStatus _openDatabase(){

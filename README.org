@@ -688,3 +688,52 @@ int main(int argc, char *argv[]) {
 * We successfully our QStyledItemDelegate using the following non-AI sources.
 ** [[https://wiki.qt.io/Combo_Boxes_in_Item_Views][wiki example with QComboBox as the QStyledItemDelegate]]
 ** [[https://doc.qt.io/qt-6/model-view-programming.html][official doc again, with QSpinBox as QStyledItemDelegate. Also, this is the same of model-view-prgogramming]]
+* we need to [[https://doc.qt.io/qt-6/qdatawidgetmapper.html#addMapping][qdatawidgetmapper]]
+* We also need to read on difference between:
+** QAbstractItemView
+** QAbstractItemModel
+** QStandardItem
+** QStandardItemModel
+** maybe read these
+*** https://forum.qt.io/topic/86241/qstandarditemmodel-vs-qabstractitemmodel
+*** https://stackoverflow.com/questions/10510703/what-are-the-advantages-of-qabstractitemmodel-over-qstandarditemmodel
+*** https://www.qtcentre.org/threads/70152-QAbstractItemModel-or-QStandardItemModel
+*** https://lists.qt-project.org/pipermail/pyside/2016-January/002353.html
+*** https://pyside.qt-project.narkive.com/xpwYnKN2/qstandarditemmodel-vs-qabstractitemmodel
+* we keep giving up previous ideas, becoz these things are "kinda" easy but also, not very imaginative. So it is quite boring. So now, we need to test this idea:
+#+begin_src c++
+
+  from PySide6.QtGui import QStandardItemModel, QStandardItem
+  from PySide6.QtSql import QSqlQuery
+  from PySide6.QtCore import Qt
+
+
+
+  // # 1. Initialize your QStandardItemModel with required columns
+  model = QStandardItemModel(0, 3) # 0 rows initially, 3 columns
+  model.setHeaderData(0, Qt.Horizontal, "Column A")
+  model.setHeaderData(1, Qt.Horizontal, "Column B (from SQL)")
+  model.setHeaderData(2, Qt.Horizontal, "Column C (from SQL)")
+
+  // # 2. Execute a QSqlQuery to fetch the data
+  query = QSqlQuery("SELECT col_b_data, col_c_data FROM your_table")
+
+  // # 3. Iterate through the query results and populate the standard item model
+  while query.next():
+      // # Create standard items for the SQL data
+      item_b = QStandardItem(query.value(0))
+      item_c = QStandardItem(query.value(1))
+
+      // # Create an item for the non-SQL column (example static text)
+      item_a = QStandardItem("Custom Data")
+
+      // # Create a list of items for the new row
+      new_row = [item_a, item_b, item_c]
+
+      // # Append the row to the model
+      model.appendRow(new_row)
+
+#+end_src
+* Remember,our commits message, should mention:
+** _viewGetUpdate() removed
+** _on_updateUser_clicked() removed

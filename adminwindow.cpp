@@ -35,11 +35,11 @@ AdminWindow::AdminWindow(QWidget *parent)
   fileMenu = menubar->addMenu(tr("&Database"));
   // fileMenu = new QMenu();
   QAction *actionDnR = new QAction("Drop and Recreate", this);
-  fileMenu->addAction(actionDnR); 
+  fileMenu->addAction(actionDnR);
   // menubar->addMenu(fileMenu);
 
   connect(actionDnR, &QAction::triggered, this, &AdminWindow::_restart_database);
-  // connect(ui->textEdit_ssync, &QTextEdit::textChanged, this, &MainWindow::test_text_edit);
+
 
 
 
@@ -57,7 +57,7 @@ AdminWindow::~AdminWindow()
 void AdminWindow::_restart_database()
 {
 
-  ui->textEdit->append("Text inserted by button.\n"); // Appends text to a new line
+
 
 
 

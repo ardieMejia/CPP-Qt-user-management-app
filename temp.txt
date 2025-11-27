@@ -1,0 +1,124 @@
+#ifndef MYTABLEMODEL_H
+#define MYTABLEMODEL_H
+
+#include <QAbstractTableModel>
+#include <QList>
+#include <QStringList>
+
+class MyTableModel : public QAbstractTableModel
+{
+    Q_OBJECT
+
+public:
+    explicit MyTableModel(QObject *parent = nullptr);
+
+    // Basic model functions
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+
+    // Functions to add/modify data
+    void addRow(const QStringList &rowData);
+    void setData(int row, int column, const QVariant &value);
+
+private:
+    QList<QStringList> m_data;
+    QStringList m_header;
+};
+
+#endif // MYTABLEMODEL_H
+
+--------------------------------------------------
+
+
+==================================================
+
+#include "MyTableModel.h"
+
+MyTableModel::MyTableModel(QObject *parent)
+    : QAbstractTableModel(parent)
+{
+    m_header << "Column 1" << "Column 2" << "Column 3"; // Example headers
+}
+
+int MyTableModel::rowCount(const QModelIndex &parent) const
+{
+    if (parent.isValid())
+        return 0;
+    return m_data.count();
+}
+
+int MyTableModel::columnCount(const QModelIndex &parent) const
+{
+    if (parent.isValid())
+        return 0;
+    return m_header.count();
+}
+
+QVariant MyTableModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::DisplayRole) {
+        return m_data.at(index.row()).at(index.column());
+    }
+    return QVariant();
+}
+
+QVariant MyTableModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role == Qt::DisplayRole) {
+        if (orientation == Qt::Horizontal) {
+            return m_header.at(section);
+        } else {
+            return section + 1; // Row numbers
+        }
+    }
+    return QVariant();
+}
+
+void MyTableModel::addRow(const QStringList &rowData)
+{
+    beginInsertRows(QModelIndex(), m_data.count(), m_data.count());
+    m_data.append(rowData);
+    endInsertRows();
+}
+
+void MyTableModel::setData(int row, int column, const QVariant &value)
+{
+    if (row >= 0 && row < m_data.count() && column >= 0 && column < m_data.at(row).count()) {
+        m_data[row][column] = value.toString();
+        emit dataChanged(index(row, column), index(row, column), {Qt::DisplayRole});
+    }
+}
+
+==================================================
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "MyTableModel.h"
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+
+    MyTableModel *model = new MyTableModel(this);
+    ui->tableView->setModel(model);
+
+    // Add some sample data
+    model->addRow({"Data A1", "Data B1", "Data C1"});
+    model->addRow({"Data A2", "Data B2", "Data C2"});
+    model->addRow({"Data A3", "Data B3", "Data C3"});
+
+    // Optional: Adjust column widths
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
