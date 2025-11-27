@@ -6,10 +6,11 @@
 
 #include "database.h"
 
-UserUpdateWidget::UserUpdateWidget(QWidget *parent, int userId)
+UserUpdateWidget::UserUpdateWidget(QWidget *parent, int userId, int userDepartmentId)
   : QWidget(parent)
   , ui(new Ui::UserUpdateWidget)
   , m_userId(userId)
+  , m_userDepartmentId(userDepartmentId)
     
 {
   ui->setupUi(this);
@@ -46,26 +47,13 @@ UserUpdateWidget::UserUpdateWidget(QWidget *parent, int userId)
 
 
 
-    
+
+
       
-    ui->userDepartmentComboBox->setItemText(0,"asd");
-    ui->userDepartmentComboBox->setCurrentIndex(0);
+
     
 
-
-    // ===== old simple example
-    // modelCombo1 = new QStringListModel(this);    
-    // QStringList list2;
-    // for(int i=0; i < modelDepartment->rowCount();i++){
-    //   list2 << modelDepartment->record(i).field("department_name").value().toString();
-    // }
-    // modelCombo1->setStringList(list2);
-    // ui->userDepartmentComboBox->setModel(modelCombo1);
-    // ui->userDepartmentComboBox->setCurrentIndex(2);
-    // ===== old simple example
-
-
-
+    int _currentIndex = 0;
 
     modelCombo2 = new QStandardItemModel(this);
     for(int i=0; i < modelDepartment->rowCount();i++){
@@ -74,11 +62,16 @@ UserUpdateWidget::UserUpdateWidget(QWidget *parent, int userId)
       itemDeptName = modelDepartment->record(i).field("department_name").value().toString();
       itemId = modelDepartment->record(i).field("id").value().toInt();
       modelCombo2->appendRow(new QStandardItem(itemDeptName));
-      modelCombo2->setData(modelCombo2->index(0, 0), itemId, Qt::UserRole); // Store a custom ID
+      modelCombo2->setData(modelCombo2->index(i, 0), itemId, Qt::UserRole); // Store a custom ID
+      if (itemId == userDepartmentId){
+	_currentIndex = i;
+      }
     }
 
     ui->userDepartmentComboBox->setModel(modelCombo2);
-    ui->userDepartmentComboBox->setCurrentIndex(2);
+
+    // qDebug() << modelCombo2->data(modelCombo2->index(1,0), Qt::UserRole);
+    ui->userDepartmentComboBox->setCurrentIndex(_currentIndex);
 
 
     

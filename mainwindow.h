@@ -38,18 +38,19 @@ private slots:
   // void on_pushButton_4_clicked();
   void on_pushButton_clicked();
   void on_buttonGetAllUsers_clicked();
+  void on_buttonGetAllDept_clicked();
   void on_buttonDeleteSelection_clicked();
+  void on_buttonDeleteDeptSelection_clicked();
   void on_buttonTableExists_clicked();
-  void deleteUser(QVector<int> &arr);
+  void on_buttonDeptTableExists_clicked();
+  void deleteUser(int userId);
+  void deleteDepartment(int departmentId);
   void viewGetUpdate(const QModelIndex &index);
-  void _viewGetUpdate(const QModelIndex &index);
   void on_insertUserDialog_clicked();
   void on_insertDepartmentDialog_clicked();
-  void _on_updateUser_clicked();
 
-public slots:
-  void test_function(int index);
-  void test_text_edit();
+
+
   
 
   
@@ -59,8 +60,10 @@ private:
   QStringListModel *modelHack;
   QStringListModel *model2;
   QSqlQueryModel *modelUser;
+  QSqlQueryModel *modelDepartment;
   QString textInput_model;
   QStandardItemModel *modelUserTable;
+  QStandardItemModel *modelDepartmentTable;
   // QAbstractItemModel *testmodel;
 
   QStandardItemModel *modelCurrentUser;

@@ -25,7 +25,7 @@ class UserUpdateWidget : public QWidget
   Q_OBJECT
   
 public:
-  UserUpdateWidget(QWidget *parent = nullptr, int userId = -1);
+  UserUpdateWidget(QWidget *parent = nullptr, int userId = -1, int userDepartmentId = -1);
   ~UserUpdateWidget();
 
 
@@ -46,6 +46,7 @@ private:
   QSqlQueryModel *modelDepartment;
   QSqlQueryModel *modelUser;
   int m_userId;
+  int m_userDepartmentId;
 
 
 

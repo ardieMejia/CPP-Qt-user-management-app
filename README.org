@@ -734,3 +734,6 @@ int main(int argc, char *argv[]) {
       model.appendRow(new_row)
 
 #+end_src
+* Remember,our commits message, should mention:
+** _viewGetUpdate() removed
+** _on_updateUser_clicked() removed

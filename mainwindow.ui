@@ -14,26 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QComboBox" name="comboBox_ssync">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>490</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit_ssync">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>540</y>
-      <width>151</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_ssync">
     <property name="geometry">
      <rect>
@@ -45,26 +25,6 @@
     </property>
     <property name="text">
      <string>TextLabel</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit_name">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>300</y>
-      <width>221</width>
-      <height>41</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit_age">
-    <property name="geometry">
-     <rect>
-      <x>470</x>
-      <y>360</y>
-      <width>221</width>
-      <height>41</height>
-     </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="buttonGetAllUsers">
@@ -93,8 +53,8 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>130</y>
+      <x>630</x>
+      <y>70</y>
       <width>129</width>
       <height>33</height>
      </rect>
@@ -132,27 +92,14 @@
    <widget class="QPushButton" name="insertUserDialog">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>190</y>
+      <x>630</x>
+      <y>140</y>
       <width>129</width>
       <height>33</height>
      </rect>
     </property>
     <property name="text">
      <string>Insert User Window</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="updateUser">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>560</y>
-      <width>129</width>
-      <height>33</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Update User</string>
     </property>
    </widget>
    <widget class="QTableView" name="departmentTableView">
@@ -168,14 +115,53 @@
    <widget class="QPushButton" name="insertDepartmentDialog">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>240</y>
+      <x>630</x>
+      <y>200</y>
       <width>129</width>
       <height>33</height>
      </rect>
     </property>
     <property name="text">
      <string>Insert Dept Window</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonDeptTableExists">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>330</y>
+      <width>97</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Table Exists?</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonGetAllDept">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>240</y>
+      <width>97</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Refresh</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonDeleteDeptSelection">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>290</y>
+      <width>97</width>
+      <height>33</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Delete Selection</string>
     </property>
    </widget>
   </widget>
