@@ -23,11 +23,6 @@
 #include "insertuserwindow.h"
 #include "insertdeptwindow.h"
 #include "userupdatewidget.h"
-#include "usercsvwidget.h"
-#include <QMetaObject>
-#include <QMetaProperty>
-
-
 
 
 
@@ -379,31 +374,12 @@ void MainWindow::on_buttonDeptTableExists_clicked (){
 void MainWindow::on_insertUserDialog_clicked(){
   InsertUserWindow *insertuserwindow = new InsertUserWindow(this);
   insertuserwindow->show();
-  // QObject *object = 
-
-    QObject *object = ui->insertUserDialog;
-    const QMetaObject *metaobject = object->metaObject();
-    int count = metaobject->propertyCount();
-    for (int i=0; i<count; ++i) {
-      QMetaProperty metaproperty = metaobject->property(i);
-      const char *name = metaproperty.name();
-      QVariant value = object->property(name);
-      qDebug() << "name: " << name << "value: " << value;
-    }
 }
 
 
 void MainWindow::on_insertDepartmentDialog_clicked(){
   InsertDeptWindow *insertdeptwindow = new InsertDeptWindow(this);
   insertdeptwindow->show();
-}
-
-
-void MainWindow::on_insertUserCsvDialog_clicked(){
-  UserCsvWidget *usercsvwidget = new UserCsvWidget(this);
-  usercsvwidget->setWindowFlag(Qt::Window);
-  // Qt::Window
-  usercsvwidget->show();
 }
 
 
