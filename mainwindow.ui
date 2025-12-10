@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>460</x>
-      <y>10</y>
+      <y>50</y>
       <width>97</width>
       <height>33</height>
      </rect>
@@ -54,7 +54,7 @@
     <property name="geometry">
      <rect>
       <x>630</x>
-      <y>70</y>
+      <y>30</y>
       <width>129</width>
       <height>33</height>
      </rect>
@@ -67,7 +67,7 @@
     <property name="geometry">
      <rect>
       <x>460</x>
-      <y>70</y>
+      <y>90</y>
       <width>97</width>
       <height>33</height>
      </rect>
@@ -80,7 +80,7 @@
     <property name="geometry">
      <rect>
       <x>460</x>
-      <y>150</y>
+      <y>140</y>
       <width>97</width>
       <height>33</height>
      </rect>
@@ -93,7 +93,7 @@
     <property name="geometry">
      <rect>
       <x>630</x>
-      <y>140</y>
+      <y>80</y>
       <width>129</width>
       <height>33</height>
      </rect>
@@ -106,9 +106,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>250</y>
+      <y>280</y>
       <width>421</width>
-      <height>111</height>
+      <height>161</height>
      </rect>
     </property>
    </widget>
@@ -116,7 +116,7 @@
     <property name="geometry">
      <rect>
       <x>630</x>
-      <y>200</y>
+      <y>140</y>
       <width>129</width>
       <height>33</height>
      </rect>
@@ -128,8 +128,8 @@
    <widget class="QPushButton" name="buttonDeptTableExists">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>330</y>
+      <x>460</x>
+      <y>360</y>
       <width>97</width>
       <height>33</height>
      </rect>
@@ -141,8 +141,8 @@
    <widget class="QPushButton" name="buttonGetAllDept">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>240</y>
+      <x>460</x>
+      <y>280</y>
       <width>97</width>
       <height>33</height>
      </rect>
@@ -154,14 +154,40 @@
    <widget class="QPushButton" name="buttonDeleteDeptSelection">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>290</y>
+      <x>460</x>
+      <y>320</y>
       <width>97</width>
       <height>33</height>
      </rect>
     </property>
     <property name="text">
      <string>Delete Selection</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="insertUserCsvDialog">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>190</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>User CSV Dialog</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="insertUserDepartmentDialog">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>410</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Department CSV Dialog</string>
     </property>
    </widget>
   </widget>

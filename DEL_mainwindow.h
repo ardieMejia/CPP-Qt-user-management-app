@@ -48,10 +48,10 @@ private slots:
   void viewGetUpdate(const QModelIndex &index);
   void on_insertUserDialog_clicked();
   void on_insertDepartmentDialog_clicked();
-  void on_insertUserCsvDialog_clicked();
 
 
 
+  
 
   
 private:
