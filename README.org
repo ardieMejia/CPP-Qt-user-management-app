@@ -737,3 +737,30 @@ int main(int argc, char *argv[]) {
 * Remember,our commits message, should mention:
 ** _viewGetUpdate() removed
 ** _on_updateUser_clicked() removed
+* our CSV strategy for now:
+** there are like a million ways to do insertion for parent-child rels
+*** 1, we insert by name, challenging and more fun, definitely makes more sense, since users can check, and namings arent weird. but has a risk of complicating our code
+*** 2, by number, this makes more logical sense, in addition it creates a "pivot" value, safer
+*** 3, user manually sets this, the best method, because the system IS the communication. the user SEES the connection
+* We need to move our enum class to its own simple header
+#+begin_src c++
+
+  enum class ReadCsvStatus{
+  Success = 0,
+  SingleFile = 1,
+  MultiFile = 2,
+  
+};
+
+#+end_src
+* Our correct CSV:
+** userId,userName,age,departmentName
+** department names
+*** Tournament Director
+*** Chief Arbiter
+*** Pairing Officer
+*** Scoring & Results
+*** Administration & Registration
+*** Logistics & Venue Management
+*** Press & Media Relations
+** 

@@ -23,12 +23,6 @@
 #include "insertuserwindow.h"
 #include "insertdeptwindow.h"
 #include "userupdatewidget.h"
-#include "usercsvwidget.h"
-#include "deptcsvwidget.h"
-#include <QMetaObject>
-#include <QMetaProperty>
-
-
 
 
 
@@ -47,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent)
   g_current_connection_status = _openDatabase();
   ui->userTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
   connect(ui->userTableView, &QTableView::doubleClicked, this, &MainWindow::viewGetUpdate);
-
 
   
   
@@ -70,8 +63,6 @@ void MainWindow::call_me(){
 void MainWindow::on_pushButton_clicked(){
   AdminWindow *adminwindow = new AdminWindow(this);
   adminwindow->show();
-  
-
 }
 
 
@@ -110,7 +101,6 @@ void MainWindow::on_buttonGetAllUsers_clicked (){
   if(modelUserTable){
     qDebug() << modelUserTable->rowCount();
       if(modelUserTable->rowCount()){
-
 	qDebug() << "helo";
 	ui->userTableView->setModel(modelUserTable);
 	// ui->userTableView->setEditTriggers(QAbstractItemView::DoubleClicked);
@@ -119,7 +109,6 @@ void MainWindow::on_buttonGetAllUsers_clicked (){
 	
 	ui->userTableView->show();
       }
-
     }
 
 }
@@ -325,14 +314,11 @@ void MainWindow::on_buttonDeptTableExists_clicked (){
 
   qDebug() << QString::fromStdString(g_current_connection_status.statusString);
 
-
   if(g_current_connection_status.status){    
     // isUsersTableFilled = true;
-
     QSqlDatabase db = QSqlDatabase::database("_render_connection_db");
     QSqlQuery query(db);
     
-
 
     query.prepare("SELECT * FROM departments");
     query.exec();
@@ -363,7 +349,6 @@ void MainWindow::on_buttonDeptTableExists_clicked (){
     
     // ==================================================    
     
-
   
 
   }
@@ -389,39 +374,12 @@ void MainWindow::on_buttonDeptTableExists_clicked (){
 void MainWindow::on_insertUserDialog_clicked(){
   InsertUserWindow *insertuserwindow = new InsertUserWindow(this);
   insertuserwindow->show();
-  // QObject *object = 
-
-    QObject *object = ui->insertUserDialog;
-    const QMetaObject *metaobject = object->metaObject();
-    int count = metaobject->propertyCount();
-    for (int i=0; i<count; ++i) {
-      QMetaProperty metaproperty = metaobject->property(i);
-      const char *name = metaproperty.name();
-      QVariant value = object->property(name);
-      qDebug() << "name: " << name << "value: " << value;
-    }
 }
 
 
 void MainWindow::on_insertDepartmentDialog_clicked(){
   InsertDeptWindow *insertdeptwindow = new InsertDeptWindow(this);
   insertdeptwindow->show();
-}
-
-
-void MainWindow::on_insertUserCsvDialog_clicked(){
-  UserCsvWidget *usercsvwidget = new UserCsvWidget(this);
-  usercsvwidget->setWindowFlag(Qt::Window);
-  // Qt::Window
-  usercsvwidget->show();
-}
-
-
-void MainWindow::on_insertDeptCsvDialog_clicked(){
-  DeptCsvWidget *deptcsvwidget = new DeptCsvWidget(this);
-  deptcsvwidget->setWindowFlag(Qt::Window);
-  // Qt::Window
-  deptcsvwidget->show();
 }
 
 
