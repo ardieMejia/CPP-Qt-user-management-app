@@ -2,3 +2,6 @@ fideId,fideName,fideRating,mcfId
 35815787,"Anand, Vikram",1710,156
 35815787,"Anand, Vikram",1710,156
 11115125,"Sathasivam, Palanivel",1690,157
+11115125,"supposed maximum fiderating",3000,157
+11115125,"this should fail",-12,157
+11115125,"this should obviously fail","we23",157

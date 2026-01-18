@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>UserCsvWidget</class>
- <widget class="QWidget" name="UserCsvWidget">
+ <class>DeptCsvWidget</class>
+ <widget class="QWidget" name="DeptCsvWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>421</height>
+    <width>428</width>
+    <height>410</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="uploadUserCsv">
+  <widget class="QPushButton" name="uploadDeptCsv">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>40</y>
+     <x>30</x>
+     <y>30</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -26,29 +26,10 @@
     <string>Upload CSV</string>
    </property>
   </widget>
-  <widget class="QLabel" name="userCsvStatus">
+  <widget class="QPushButton" name="validateDeptCsv">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>10</y>
-     <width>111</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Status: (for now its data.csv)</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="validateUserCsv">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
+     <x>30</x>
      <y>170</y>
      <width>141</width>
      <height>31</height>
@@ -61,8 +42,8 @@
   <widget class="QPushButton" name="uploadToDB">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>310</y>
+     <x>30</x>
+     <y>320</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -71,13 +52,13 @@
     <string>Upload to DB</string>
    </property>
   </widget>
-  <widget class="QLabel" name="uploadToDBStatus">
+  <widget class="QLabel" name="deptCsvStatusInfo">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>280</y>
-     <width>111</width>
-     <height>91</height>
+     <x>200</x>
+     <y>10</y>
+     <width>161</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="text">
@@ -93,8 +74,8 @@
   <widget class="QFrame" name="validateCsvFrame">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>130</y>
+     <x>200</x>
+     <y>120</y>
      <width>171</width>
      <height>141</height>
     </rect>
@@ -143,6 +124,44 @@
      <bool>true</bool>
     </property>
    </widget>
+  </widget>
+  <widget class="QLabel" name="uploadToDBStatus">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>290</y>
+     <width>111</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="deptCsvStatus">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>80</y>
+     <width>171</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources/>

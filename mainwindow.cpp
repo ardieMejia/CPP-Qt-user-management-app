@@ -24,6 +24,7 @@
 #include "insertdeptwindow.h"
 #include "userupdatewidget.h"
 #include "usercsvwidget.h"
+#include "deptcsvwidget.h"
 #include <QMetaObject>
 #include <QMetaProperty>
 
@@ -47,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
   ui->userTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
   connect(ui->userTableView, &QTableView::doubleClicked, this, &MainWindow::viewGetUpdate);
 
+
   
   
 }
@@ -68,6 +70,8 @@ void MainWindow::call_me(){
 void MainWindow::on_pushButton_clicked(){
   AdminWindow *adminwindow = new AdminWindow(this);
   adminwindow->show();
+  
+
 }
 
 
@@ -410,6 +414,14 @@ void MainWindow::on_insertUserCsvDialog_clicked(){
   usercsvwidget->setWindowFlag(Qt::Window);
   // Qt::Window
   usercsvwidget->show();
+}
+
+
+void MainWindow::on_insertDeptCsvDialog_clicked(){
+  DeptCsvWidget *deptcsvwidget = new DeptCsvWidget(this);
+  deptcsvwidget->setWindowFlag(Qt::Window);
+  // Qt::Window
+  deptcsvwidget->show();
 }
 
 

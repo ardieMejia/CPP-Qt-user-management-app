@@ -49,6 +49,7 @@ private slots:
   void on_insertUserDialog_clicked();
   void on_insertDepartmentDialog_clicked();
   void on_insertUserCsvDialog_clicked();
+  void on_insertDeptCsvDialog_clicked();
 
 
 

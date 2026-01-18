@@ -1,5 +1,5 @@
-#ifndef USERCSVWIDGET_H
-#define USERCSVWIDGET_H
+#ifndef DEPTCSVWIDGET_H
+#define DEPTCSVWIDGET_H
 
 
 #include <QWidget>
@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <mycsvutilities.h>
 
+
 using namespace std;
 
 
@@ -18,25 +19,24 @@ using namespace std;
 
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class UserCsvWidget; }
+namespace Ui { class DeptCsvWidget; }
 QT_END_NAMESPACE
 
 
-class UserCsvWidget : public QWidget
+class DeptCsvWidget : public QWidget
 {
   Q_OBJECT
 
   
 public:
-  UserCsvWidget(QWidget *parent = nullptr);
-  ~UserCsvWidget();
+  DeptCsvWidget(QWidget *parent = nullptr);
+  ~DeptCsvWidget();
 
 
 private slots:
-  void empty_function();
-  void on_uploadUserCsv_clicked();
+  void on_uploadDeptCsv_clicked();
   void fill_full_csv(std::string &pathFile);
-  void on_validateUserCsv_clicked();
+  void on_validateDeptCsv_clicked();
   void on_uploadToDB_clicked();
   ReadCsvStatus getFile__QStringList(QStringList& files);
 					     
@@ -46,13 +46,14 @@ public slots:
 
 
 private:
-  Ui::UserCsvWidget *ui;
+  Ui::DeptCsvWidget *ui;
   std::vector<std::vector<std::string>> full_csv;
   bool valid_full_csv;
+  bool proceed_csv;
 
 
 
 };
 
-#endif // USERCSVWIDGET_H
+#endif // DEPTCSVWIDGET_H
 

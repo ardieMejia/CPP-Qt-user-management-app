@@ -29,14 +29,14 @@
   <widget class="QLabel" name="userCsvStatus">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>10</y>
-     <width>111</width>
-     <height>91</height>
+     <x>190</x>
+     <y>90</y>
+     <width>171</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Status: (for now its data.csv)</string>
+    <string/>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -75,7 +75,7 @@
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>280</y>
+     <y>270</y>
      <width>111</width>
      <height>91</height>
     </rect>
@@ -143,6 +143,25 @@
      <bool>true</bool>
     </property>
    </widget>
+  </widget>
+  <widget class="QLabel" name="userCsvStatusInfo">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>20</y>
+     <width>161</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources/>
